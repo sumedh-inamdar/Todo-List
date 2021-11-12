@@ -1,1 +1,1 @@
-console.log("This is working ok");
+(()=>{"use strict";const t=(t,e,o,s)=>{const c={getTitle:()=>t,setTitle:e=>t=e,getDescription:()=>e,setDescription:t=>e=t,getDate:()=>o,setDate:t=>o=t,getPriority:()=>s,setPriority:t=>s=t};return Object.create(c)},e=t("a","b","c","d"),o=t("b","c","d","e");console.log(e.setTitle("cd")),console.log(e.getTitle()),console.log(e.prototype===o.prototype)})();
