@@ -1,0 +1,79 @@
+body {
+    position: relative;
+    height: 100vh;
+    margin: 0px;
+}
+main {
+    flex: 1 0 auto;
+    display: flex;
+    flex-direction: row;
+}
+body,
+#sideBar,
+#mainContent,
+.flexCol {
+    display: flex;
+    flex-direction: column;
+}
+header {
+    flex: 0 0 100px;
+    background-color: teal;
+}
+#sideBar {
+    flex: 0 0 300px;
+    background-color: wheat;
+
+}
+
+#sideBarNavCont {
+    background-color: yellow;
+}
+#projCont {
+    background-color: yellowgreen;
+}
+h4.flexCol {
+    /* margin: 15px 0px 0px; */
+}
+.projList {
+    background-color: teal;
+}
+.projItem {
+    display: flex;
+    align-items: center;
+    background-color: thistle;
+}
+.projItem li,
+.projItem h4{
+    flex: 1 0 auto;
+}
+.projItem i{
+    margin: 5px;
+}
+.projItem i:hover {
+    background-color: white;
+}
+
+.inputProj {
+    
+}
+
+footer {
+    flex: 0 0 2rem;
+    font-family: inherit;
+    font-weight: 400;
+    font-size: 18px;
+    text-align: center;
+    width: 100%;
+    min-width: 300px;
+    background-color: violet;
+}
+
+footer input {
+    display: inline;
+    height: 20px;
+    transition: transform 1s;
+}
+  
+footer input:hover {
+    transform: scale(3) translate(0, -5px);
+}
