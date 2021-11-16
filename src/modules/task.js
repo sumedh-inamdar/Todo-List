@@ -4,8 +4,12 @@ Module responsible for creating a task object and supporting functions
 
 */
 
-const Task = (title, description, date, priority) => {
+const Task = (id, title, description, date, priority) => {
+    // All tasks default to inbox upon creation
     const proto = {
+        getID() {
+            return id;
+        },
         getTitle() {
             return title;
         },
