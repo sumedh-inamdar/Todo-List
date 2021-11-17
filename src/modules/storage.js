@@ -1,6 +1,6 @@
 
 const activeTasks = [];
-const activeProjects = ['Cleaning', 'Packing', 'Mopping'];
+const activeProjects = [];
 
 const Storage = {
     addProject: (proj) => {
@@ -9,14 +9,14 @@ const Storage = {
     getProjects: () => {
         return activeProjects;
     },
-    checkProject: (proj) => {
-        return activeProjects.includes(proj);
+    checkProject: (projName) => {
+        return activeProjects.some(project => project.getName() === projName);
     },
-    updateProject: (oldProj, newProj) => {
-        activeProjects.splice(activeProjects.indexOf(oldProj), 1, newProj);
+    updateProject: (oldProjName, newProjName) => {
+        activeProjects[activeProjects.findIndex(proj => Storage.checkProject(oldProjName))].setName(newProjName);
     },
-    deleteProject: (proj) => {
-        activeProjects.splice(activeProjects.indexOf(proj), 1);
+    deleteProject: (projName) => {
+        activeProjects.splice(activeProjects.findIndex(proj => Storage.checkProject(projName)), 1);
     }
 }
 

@@ -81,10 +81,10 @@ const _loadSideBarProjLinks = () => {
     // Create ul list element to append all projects as children to
     const projList = _createElement('ul', ['projList'], '', 'projList');
     projCont.appendChild(projList);
-
+    
     // Add all active projects
     Storage.getProjects().forEach(proj =>
-        projList.appendChild(addProjectDOM(proj)));
+        projList.appendChild(addProjectDOM(proj.getName())));
 
     return projCont;
 
@@ -93,6 +93,7 @@ const _loadSideBarProjLinks = () => {
 const addProjListener = (event) => {
     console.log(event.target);
     // Bring up add project modal
+    
     // Setup listener for 'click' of add project button
     // call addProjectDOM
     // add project to activeProjects (check for duplicate)
@@ -176,7 +177,6 @@ const deleteProject = (projectName, projectNode) => {
     // delete from Storage
     Storage.deleteProject(projectName);
     projectNode.remove();
-    console.log(Storage.getProjects());
 }
 
 
