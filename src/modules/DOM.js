@@ -114,6 +114,9 @@ const addProjectDOM = (projName) => {
 
     // Add delete icon and setup event listener
     const delIcon = _createElement('i', ['far','fa-trash-alt']);
+    delIcon.addEventListener('click', () => {
+        deleteProject(projName, projItem);
+    })
     projItem.appendChild(delIcon);
 
     return projItem;
@@ -161,13 +164,19 @@ const editProject = (listItemNode) => {
         const liNode = _createElement('li', '', newProjName);
 
         formProj.replaceWith(liNode);
-        
+
         event.preventDefault();
     });
 
     // replace list item with input element
     listItemNode.replaceWith(formProj);
     
+}
+const deleteProject = (projectName, projectNode) => {
+    // delete from Storage
+    Storage.deleteProject(projectName);
+    projectNode.remove();
+    console.log(Storage.getProjects());
 }
 
 
