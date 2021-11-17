@@ -3,7 +3,7 @@
 Module responsible for DOM loading and manipulation
 
 */
-import { activeTasks, activeProjects } from './storage.js';
+import { Storage } from './storage.js';
 import { Task } from './task.js';
 
 const _createElement = (type, classNameArr, text, id) => {
@@ -83,7 +83,7 @@ const _loadSideBarProjLinks = () => {
     projCont.appendChild(projList);
 
     // Add all active projects
-    activeProjects.forEach(proj =>
+    Storage.getProjects().forEach(proj =>
         projList.appendChild(addProjectDOM(proj)));
 
     return projCont;
@@ -120,14 +120,15 @@ const addProjectDOM = (projName) => {
 
 }
 
-const addProject = (event, projectName) => {
-    console.log(projectName + " added!");
-    event.preventDefault();
+const addProject = (projectName) => {
+    // check for duplicates in storage
+    
+    console.log(projectName);
 }
 
 // Changes project list item to editable field and updates project name
 const editProject = (listItemNode) => {
-
+    
     // store project name in temp var
     const projName = listItemNode.textContent;
 
@@ -140,18 +141,33 @@ const editProject = (listItemNode) => {
     // create form element and append inputProj to it
     const formProj = _createElement('form');
     const buttonProj = _createElement('button');
+    const saveProj = _createElement('i', ['far', 'fa-save']);
+    buttonProj.appendChild(saveProj);
     buttonProj.type = 'submit';
     formProj.append(inputProj, buttonProj);
 
     // Setup event listener upon form element
-    formProj.addEventListener('submit', (event) => addProject(event, 'this.value'));
+    formProj.addEventListener('submit', (event) => {
+
+        const newProjName = inputProj.value;
+        
+        if (Storage.checkProject(newProjName)) {
+            alert('Project name exists.');
+            return;
+        }
+
+        Storage.updateProject(projName, newProjName);
+
+        const liNode = _createElement('li', '', newProjName);
+
+        formProj.replaceWith(liNode);
+        
+        event.preventDefault();
+    });
 
     // replace list item with input element
     listItemNode.replaceWith(formProj);
     
-    
-
-
 }
 
 
