@@ -52,9 +52,18 @@ h4.flexCol {
 .projItem i:hover {
     background-color: white;
 }
+form {
+    display: flex;   
+}
+button {
+    padding: 0px;
+}
+.fa-save{
+    font-size: 16px;
+}
 
 .inputProj {
-    
+
 }
 
 footer {
