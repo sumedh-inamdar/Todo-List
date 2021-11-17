@@ -41,6 +41,7 @@ h4.flexCol {
     display: flex;
     align-items: center;
     background-color: thistle;
+    height: 26px;
 }
 .projItem li,
 .projItem h4{
@@ -51,6 +52,12 @@ h4.flexCol {
 }
 .projItem i:hover {
     background-color: white;
+}
+.addProjLI {
+    list-style-type: none;
+}
+.addProjLI:hover {
+    color: white;
 }
 form {
     display: flex;   

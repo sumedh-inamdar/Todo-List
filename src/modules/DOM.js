@@ -83,17 +83,29 @@ const _loadSideBarProjLinks = () => {
     projCont.appendChild(projList);
     
     // Add all active projects
-    Storage.getProjects().forEach(proj =>
-        projList.appendChild(addProjectDOM(proj.getName())));
+    Storage.getProjects().forEach(proj => projList.appendChild(addProjectDOM(proj.getName())));
+
+    // Add "Add project" list item
+    projList.appendChild(createAddProj());
 
     return projCont;
+
+}
+const createAddProj = () => {
+    const addCont = _createElement('div', ['projItem']);
+
+    addCont.appendChild(_createElement('li', ['addProjLI'], '+ Add Project'));
+
+    addCont.addEventListener('click', () => editProject(addCont));
+
+    return addCont;
 
 }
 
 const addProjListener = (event) => {
     console.log(event.target);
     // Bring up add project modal
-    
+
     // Setup listener for 'click' of add project button
     // call addProjectDOM
     // add project to activeProjects (check for duplicate)
@@ -105,13 +117,16 @@ const addProjectDOM = (projName) => {
     const projItem = _createElement('div', ['projItem'])
 
     // Add project name as listItem
-    const liNode = _createElement('li', '', projName);
+    const liNode = _createElement('li', '', projName, projName);
     projItem.appendChild(liNode);
 
     // Add edit project icon and setup event listener
     const editNode = _createElement('i', ['far','fa-edit']);
     projItem.appendChild(editNode)
-    editNode.addEventListener('click', () =>  editProject(liNode));
+    editNode.addEventListener('click', (event) => {
+        const liNodeUpdated = event.target.previousSibling;
+        if (liNodeUpdated.localName === 'li') editProject(liNodeUpdated);
+    }) 
 
     // Add delete icon and setup event listener
     const delIcon = _createElement('i', ['far','fa-trash-alt']);
@@ -130,25 +145,38 @@ const addProject = (projectName) => {
     console.log(projectName);
 }
 
+// create project form element with supplied name as value
+
+const createProjForm = (projNameDefault) => {
+
+    // create form element
+    const formProj = _createElement('form');
+
+    // create input element with placeholder value as project name
+    const inputProj = _createElement('input', ['inputProj'], '', 'inputProj');
+    inputProj.type = 'text';
+    inputProj.required = true;
+    inputProj.value = projNameDefault;
+
+    // create save button
+    const buttonProj = _createElement('button');
+    const saveProj = _createElement('i', ['far', 'fa-save']);
+    buttonProj.appendChild(saveProj);
+    buttonProj.type = 'submit';
+
+    formProj.append(inputProj, buttonProj);
+
+    return formProj;
+}
+
 // Changes project list item to editable field and updates project name
 const editProject = (listItemNode) => {
     
     // store project name in temp var
     const projName = listItemNode.textContent;
 
-    // create input element with placeholder value as project name
-    const inputProj = _createElement('input', ['inputProj'], '', 'inputProj');
-    inputProj.type = 'text';
-    inputProj.required = true;
-    inputProj.value = projName;
-
-    // create form element and append inputProj to it
-    const formProj = _createElement('form');
-    const buttonProj = _createElement('button');
-    const saveProj = _createElement('i', ['far', 'fa-save']);
-    buttonProj.appendChild(saveProj);
-    buttonProj.type = 'submit';
-    formProj.append(inputProj, buttonProj);
+    // create form element
+    const formProj = createProjForm(projName);
 
     // Setup event listener upon form element
     formProj.addEventListener('submit', (event) => {
@@ -157,14 +185,13 @@ const editProject = (listItemNode) => {
         
         if (Storage.checkProject(newProjName)) {
             alert('Project name exists.');
-            return;
+        } else {
+            Storage.updateProject(projName, newProjName);
+
+            const liNode = _createElement('li', '', newProjName, newProjName);
+    
+            formProj.replaceWith(liNode);
         }
-
-        Storage.updateProject(projName, newProjName);
-
-        const liNode = _createElement('li', '', newProjName);
-
-        formProj.replaceWith(liNode);
 
         event.preventDefault();
     });
