@@ -6,6 +6,8 @@ Module responsible for DOM loading and manipulation
 import { Storage } from './storage.js';
 import { Task } from './task.js';
 
+const openLINodes = [];
+
 const _createElement = (type, classNameArr, text, id) => {
     const element = document.createElement(type);
     if (classNameArr) element.classList.add(...classNameArr);
@@ -91,12 +93,27 @@ const _loadSideBarProjLinks = () => {
     return projCont;
 
 }
+
+// Adds "+ Add project" and setup
 const createAddProj = () => {
     const addCont = _createElement('div', ['projItem']);
 
     addCont.appendChild(_createElement('li', ['addProjLI'], '+ Add Project'));
 
-    addCont.addEventListener('click', () => editProject(addCont));
+    addCont.addEventListener('click', () => {
+        const formProj = createProjForm();
+        
+        formProj.addEventListener('submit', (event) => {
+            
+            const parentNode = event.target.parentNode;
+            // parentNode.insertBefore(addProjectDOM())
+            // add projectDOM
+            event.preventDefault();
+
+        });
+        addCont.replaceWith(formProj);
+        console.log(inputProj);
+    });
 
     return addCont;
 
@@ -117,7 +134,7 @@ const addProjectDOM = (projName) => {
     const projItem = _createElement('div', ['projItem'])
 
     // Add project name as listItem
-    const liNode = _createElement('li', '', projName, projName);
+    const liNode = _createElement('li', '', projName, projName + 'LI');
     projItem.appendChild(liNode);
 
     // Add edit project icon and setup event listener
@@ -146,11 +163,10 @@ const addProject = (projectName) => {
 }
 
 // create project form element with supplied name as value
-
 const createProjForm = (projNameDefault) => {
 
     // create form element
-    const formProj = _createElement('form');
+    const formProj = _createElement('form', '', '', projNameDefault + 'FORM');
 
     // create input element with placeholder value as project name
     const inputProj = _createElement('input', ['inputProj'], '', 'inputProj');
@@ -159,12 +175,23 @@ const createProjForm = (projNameDefault) => {
     inputProj.value = projNameDefault;
 
     // create save button
-    const buttonProj = _createElement('button');
-    const saveProj = _createElement('i', ['far', 'fa-save']);
-    buttonProj.appendChild(saveProj);
-    buttonProj.type = 'submit';
+    const saveButton = _createElement('button');
+    const saveIcon = _createElement('i', ['far', 'fa-save']);
+    saveButton.appendChild(saveIcon);
+    saveButton.type = 'submit';
 
-    formProj.append(inputProj, buttonProj);
+    // create cancel button
+    const cancelButton = _createElement('button');
+    const cancelIcon = _createElement('i', ['far', 'fa-window-close']);
+    cancelButton.appendChild(cancelIcon);
+    cancelButton.type = 'button';
+
+    // setup event listener for cancel button
+    cancelButton.addEventListener('click', (event) => {
+        closeAllForms();
+    })
+
+    formProj.append(inputProj, saveButton, cancelButton);
 
     return formProj;
 }
@@ -172,16 +199,22 @@ const createProjForm = (projNameDefault) => {
 // Changes project list item to editable field and updates project name
 const editProject = (listItemNode) => {
     
+    // close all forms in ul
+    closeAllForms();
+
     // store project name in temp var
     const projName = listItemNode.textContent;
 
+    // store li in private array (openLINodes)
+    openLINodes.push(listItemNode);
+
     // create form element
     const formProj = createProjForm(projName);
-
+    
     // Setup event listener upon form element
     formProj.addEventListener('submit', (event) => {
-
-        const newProjName = inputProj.value;
+        
+        const newProjName = document.querySelector('#inputProj').value;
         
         if (Storage.checkProject(newProjName)) {
             alert('Project name exists.');
@@ -191,6 +224,7 @@ const editProject = (listItemNode) => {
             const liNode = _createElement('li', '', newProjName, newProjName);
     
             formProj.replaceWith(liNode);
+            openLINodes.splice(openLINodes.findIndex(node => node.id === projName + 'LI'), 1);
         }
 
         event.preventDefault();
@@ -201,9 +235,41 @@ const editProject = (listItemNode) => {
     
 }
 const deleteProject = (projectName, projectNode) => {
+
+    closeAllForms();
+
     // delete from Storage
     Storage.deleteProject(projectName);
     projectNode.remove();
+}
+
+// closes all open forms in project list (ul)
+const closeAllForms = () => {
+    const ul = document.querySelector('#projList');
+    const arrProjectDivs = ul.childNodes;
+
+    // check each div if child form is present
+    arrProjectDivs.forEach(div => {
+        
+        // if yes, swap li for form
+        if (div.firstChild.nodeName === 'FORM') {
+            
+            // grab index of LInode
+            const indexLINode = openLINodes.findIndex(node => node.id.slice(0,-2) === div.firstChild.id.slice(0, -4));
+
+            console.log(indexLINode);
+
+            // replace form with li
+            div.firstChild.replaceWith(openLINodes[indexLINode]);
+
+            //remove li from memory
+            openLINodes.splice(indexLINode, 1);
+
+        }
+    })
+
+    
+
 }
 
 

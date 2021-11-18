@@ -8,3 +8,9 @@ To-do list application encompassing JS OOP common principles / best practices
 ## New lessons / material incorporated
 - SOLID principles
 - Modular patterns
+
+## Pending tasks
+- [x] Projects: add cancel button
+- [x] Projects: close other form fields once edit is pressed (create close form function)
+- [ ] Projects: Extend close form function to add project function
+- [ ] Tasks: Create Task window
