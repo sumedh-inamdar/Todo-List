@@ -75,10 +75,6 @@ const _loadSideBarProjLinks = () => {
     // Create Projects heading and add button
     const projHeading = _createElement('div', ['projItem']);
     projHeading.appendChild(_createElement('h4', ['flexCol'], 'Projects'));
-
-    const addButton = _createElement('i', ['fas','fa-plus']);
-    projHeading.appendChild(addButton);
-    addButton.addEventListener('click', addProjListener);
     projCont.appendChild(projHeading);
 
     // Create ul list element to append all projects as children to
@@ -134,16 +130,6 @@ const createAddProj = () => {
     return addCont;
 
 }
-
-const addProjListener = (event) => {
-    console.log(event.target);
-    // Bring up add project modal
-
-    // Setup listener for 'click' of add project button
-    // call addProjectDOM
-    // add project to activeProjects (check for duplicate)
-}
-
 // Adds projName to project List in DOM
 const addProjectDOM = (projName) => {
 

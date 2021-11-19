@@ -12,5 +12,5 @@ To-do list application encompassing JS OOP common principles / best practices
 ## Pending tasks
 - [x] Projects: add cancel button
 - [x] Projects: close other form fields once edit is pressed (create close form function)
-- [ ] Projects: Extend close form function to add project function
+- [x] Projects: Extend close form function to add project function
 - [ ] Tasks: Create Task window
