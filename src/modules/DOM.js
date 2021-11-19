@@ -5,6 +5,7 @@ Module responsible for DOM loading and manipulation
 */
 import { Storage } from './storage.js';
 import { Task } from './task.js';
+import { Project } from './project.js';
 
 const openLINodes = [];
 
@@ -98,21 +99,36 @@ const _loadSideBarProjLinks = () => {
 const createAddProj = () => {
     const addCont = _createElement('div', ['projItem']);
 
-    addCont.appendChild(_createElement('li', ['addProjLI'], '+ Add Project'));
+    addCont.appendChild(_createElement('li', ['addProjLI'], '+ Add Project', '+ Add ProjectLI'));
 
-    addCont.addEventListener('click', () => {
-        const formProj = createProjForm();
+    // store li in private array (openLINodes)
+    openLINodes.push(addCont.firstChild);
+
+    addCont.firstChild.addEventListener('click', (event) => {
+        closeAllForms();
         
+        const formProj = createProjForm('+ Add Project');
+        formProj.firstChild.value = '';
+
         formProj.addEventListener('submit', (event) => {
             
-            const parentNode = event.target.parentNode;
-            // parentNode.insertBefore(addProjectDOM())
-            // add projectDOM
+            const newProjName = document.querySelector('#inputProj').value;
+            console.log('project name being input is: ' + newProjName);
+            if (Storage.checkProject(newProjName)) {
+                alert('Project name exists.');
+            } else {
+                Storage.addProject(Project(newProjName));
+
+                event.target.parentNode.parentNode.insertBefore(addProjectDOM(newProjName), addCont);
+
+                formProj.replaceWith(openLINodes.find(node => node.id === '+ Add ProjectLI'));
+            }
+
             event.preventDefault();
 
         });
-        addCont.replaceWith(formProj);
-        console.log(inputProj);
+        addCont.firstChild.replaceWith(formProj);
+        event.preventDefault();
     });
 
     return addCont;
@@ -221,7 +237,7 @@ const editProject = (listItemNode) => {
         } else {
             Storage.updateProject(projName, newProjName);
 
-            const liNode = _createElement('li', '', newProjName, newProjName);
+            const liNode = _createElement('li', '', newProjName, newProjName + 'LI');
     
             formProj.replaceWith(liNode);
             openLINodes.splice(openLINodes.findIndex(node => node.id === projName + 'LI'), 1);
@@ -257,13 +273,14 @@ const closeAllForms = () => {
             // grab index of LInode
             const indexLINode = openLINodes.findIndex(node => node.id.slice(0,-2) === div.firstChild.id.slice(0, -4));
 
+            console.log(openLINodes);
             console.log(indexLINode);
 
             // replace form with li
             div.firstChild.replaceWith(openLINodes[indexLINode]);
 
-            //remove li from memory
-            openLINodes.splice(indexLINode, 1);
+            //remove li from memory (except for '+ Add Project')
+            if (div.firstChild.id != '+ Add ProjectLI') openLINodes.splice(indexLINode, 1);
 
         }
     })
