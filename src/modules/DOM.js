@@ -19,6 +19,12 @@ const _createElement = (type, classNameArr, text, id) => {
 
 // Handles loading and setup of sidebar
 const DOMLoader = {
+    loadHeader: () => {
+        // Create div container and append to header element
+        const headerDiv = _createElement('div', ['headerDiv'], 'To-Do Application');
+
+        document.querySelector('header').appendChild(headerDiv);
+    },
     loadSideBar: () => {
         
         const sideBar = document.querySelector('#sideBar');
@@ -29,8 +35,18 @@ const DOMLoader = {
         // Add section for Projects
         sideBar.appendChild(_loadSideBarProjLinks());
         
-    }
+    },
+    loadMain: () => {
+        const mainContent = document.querySelector('#mainContent');
 
+        // load task header
+        mainContent.appendChild(_loadTaskHeader('Inbox'));
+
+        // load task list for inbox
+        mainContent.appendChild(_loadTaskList('Inbox'));
+            // add edit and delete button upon hover
+
+    }
 }
 
 // Setup of Inbox, Today and This week links
@@ -69,10 +85,9 @@ const thisWeekHandler = (event) => {
 }
 
 const _loadSideBarProjLinks = () => {
-
     const projCont = _createElement('div', ['flexCol'], '', 'projCont');
 
-    // Create Projects heading and add button
+    // Create Projects heading
     const projHeading = _createElement('div', ['projItem']);
     projHeading.appendChild(_createElement('h4', ['flexCol'], 'Projects'));
     projCont.appendChild(projHeading);
@@ -91,11 +106,38 @@ const _loadSideBarProjLinks = () => {
 
 }
 
+// Adds projName to project List in DOM
+const addProjectDOM = (projName) => {
+
+    const projItem = _createElement('div', ['projItem'])
+
+    // Add project name as listItem
+    const liNode = _createElement('li', '', projName, projName + 'LI');
+    projItem.appendChild(liNode);
+
+    // Add edit project icon and setup event listener
+    const editNode = _createElement('i', ['far','fa-edit']);
+    projItem.appendChild(editNode)
+    editNode.addEventListener('click', (event) => {
+        const liNodeUpdated = event.target.previousSibling;
+        if (liNodeUpdated.localName === 'li') editProject(liNodeUpdated);
+    })
+
+    // Add delete icon and setup event listener
+    const delIcon = _createElement('i', ['far','fa-trash-alt']);
+    delIcon.addEventListener('click', () => {
+        deleteProject(projName, projItem);
+    })
+    projItem.appendChild(delIcon);
+
+    return projItem;
+
+}
 // Adds "+ Add project" and setup
 const createAddProj = () => {
     const addCont = _createElement('div', ['projItem']);
 
-    addCont.appendChild(_createElement('li', ['addProjLI'], '+ Add Project', '+ Add ProjectLI'));
+    addCont.appendChild(_createElement('li', ['noMarker'], '+ Add Project', '+ Add ProjectLI'));
 
     // store li in private array (openLINodes)
     openLINodes.push(addCont.firstChild);
@@ -130,40 +172,6 @@ const createAddProj = () => {
     return addCont;
 
 }
-// Adds projName to project List in DOM
-const addProjectDOM = (projName) => {
-
-    const projItem = _createElement('div', ['projItem'])
-
-    // Add project name as listItem
-    const liNode = _createElement('li', '', projName, projName + 'LI');
-    projItem.appendChild(liNode);
-
-    // Add edit project icon and setup event listener
-    const editNode = _createElement('i', ['far','fa-edit']);
-    projItem.appendChild(editNode)
-    editNode.addEventListener('click', (event) => {
-        const liNodeUpdated = event.target.previousSibling;
-        if (liNodeUpdated.localName === 'li') editProject(liNodeUpdated);
-    }) 
-
-    // Add delete icon and setup event listener
-    const delIcon = _createElement('i', ['far','fa-trash-alt']);
-    delIcon.addEventListener('click', () => {
-        deleteProject(projName, projItem);
-    })
-    projItem.appendChild(delIcon);
-
-    return projItem;
-
-}
-
-const addProject = (projectName) => {
-    // check for duplicates in storage
-    
-    console.log(projectName);
-}
-
 // create project form element with supplied name as value
 const createProjForm = (projNameDefault) => {
 
@@ -197,7 +205,6 @@ const createProjForm = (projNameDefault) => {
 
     return formProj;
 }
-
 // Changes project list item to editable field and updates project name
 const editProject = (listItemNode) => {
     
@@ -244,7 +251,6 @@ const deleteProject = (projectName, projectNode) => {
     Storage.deleteProject(projectName);
     projectNode.remove();
 }
-
 // closes all open forms in project list (ul)
 const closeAllForms = () => {
     const ul = document.querySelector('#projList');
@@ -275,6 +281,113 @@ const closeAllForms = () => {
 
 }
 
+// add task list
+const _loadTaskHeader = (title) => {
+    const headerContainer = _createElement('div', ['flexRow', 'task'], '', '');
+
+    const header = _createElement('h2', '', title, '');
+
+    headerContainer.appendChild(header);
+
+    return headerContainer;
+}
+
+const _loadTaskList = (projectName) => {
+    const activeTasks = projectName === 'Inbox' ? Storage.getInboxTasks() : Storage.getProject(projectName).getTasks();
+
+    const taskListCont = _createElement('div', ['flexCol', 'task'], '', '');
+
+    // for each task, create list item 
+    activeTasks.forEach(task => {
+        // create elements for each task 
+        const outerCont = _createElement('div', ['flexRow', 'outerCont']);
+        const checkCont = _createElement('div', ['taskItemLeft']);
+        const taskCont = _createElement('div', ['flexCol', 'taskCont'], '', '');
+        const liCont = _createElement('div', ['flexRow', 'taskItem'], '', '');
+        const descPrev = _createElement('div', ['descPrev'], task.getDescription(), '');
+        outerCont.append(checkCont, taskCont);
+        taskCont.append(liCont, descPrev);
+
+        // setup checkCont
+        const buttonCont = _createElement('button', ['clearButton']);
+        const circleMarker = _createElement('i', ['far', 'fa-circle']);
+        const checkMarker = _createElement('i',['far', 'fa-check-circle']);
+        buttonCont.onmouseenter = () => { 
+            circleMarker.replaceWith(checkMarker);
+        };
+        buttonCont.onmouseleave = () => { 
+            checkMarker.replaceWith(circleMarker);
+        };
+        buttonCont.append(circleMarker);
+        checkCont.append(buttonCont);
+
+        // setup liCont
+        const liNode = _createElement('li', ['noMarker'], task.getTitle());
+        const editNode = _createElement('i', ['far','fa-edit']);
+        const delIcon = _createElement('i', ['far','fa-trash-alt']);
+        liCont.append(liNode, editNode, delIcon);
+
+        // setup event listeners
+            // taskCont hover shows edit and del button
+        //task complete click listener
+        buttonCont.addEventListener('click', () => {
+            console.log('Task complete button clicked');
+        });
+        // edit click listener
+        editNode.addEventListener('click', () => {
+            console.log('Task edit button clicked');
+        });
+        // delete click listener
+        delIcon.addEventListener('click', () => {
+            console.log('Delete task button clicked');
+        });
+
+        taskListCont.appendChild(outerCont);
+
+        // add hr
+        taskListCont.appendChild(_createElement('hr'));
+
+    })
+    taskListCont.appendChild(_loadAddTaskButton(projectName));
+
+    return taskListCont;
+}
+
+
+const _loadAddTaskButton = (projectName) => {
+    
+    //create elements
+    const addCont = _createElement('div', ['flexRow', 'task'], '', 'addCont');
+    const addItemLeft = _createElement('div', ['taskItemLeft']);
+    const addIcon = _createElement('i', ['fas', 'fa-plus-circle']);
+    const addText = _createElement('p', '', 'Add Task', 'addText');
+    addItemLeft.append(addIcon);
+    addCont.append(addItemLeft, addText);
+
+    addCont.addEventListener('click', () => {
+        console.log('add task clicked');
+
+        const addPopup = _createEditTaskPopup(projectName, Storage.generateTaskID());
+
+    })
+    
+    return addCont;
+
+}
+
+const _createEditTaskPopup = (projectName, taskID) => {
+    //create elements
+    const outerCont = _createElement('div', ['flexCol', 'outerCont']);
+    
+    //top cont
+    const taskInputCont = _createElement('div', ['flexCol']);
+    const titleInput = _createElement('input', '');
+
+    //bottom cont
+    const buttonCont = _createElement('div', ['flexRow']);
+
+
+}
 
 
 export { DOMLoader };
