@@ -34,9 +34,9 @@ const render = (() => {
     Storage.addProject(Project('Mopping'));
 
     // sample inbox tasks
-    Storage.addInboxTask(Task(1, 'Garbage', 'Take garbage out to street','', 'p1'));
-    Storage.addInboxTask(Task(2, 'Bathroom Floors', 'Clean bathroom floors','', 'p2'));
-    Storage.addInboxTask(Task(3, 'Kitchen Floors', 'Clean kitchen floors','', 'p3'));
+    Storage.addInboxTask(Task(1, 'Garbage', 'Take garbage out to street','Dec 8', 'p1'));
+    Storage.addInboxTask(Task(2, 'Bathroom Floors', 'Clean bathroom floors','Dec 9', 'p2'));
+    Storage.addInboxTask(Task(3, 'Kitchen Floors', 'Clean kitchen floors','Wednesday', 'p3'));
 
     // load DOM elements
     DOMLoader.loadHeader();

@@ -4,7 +4,7 @@ Module responsible for DOM loading and manipulation
 
 */
 import { Storage } from './storage.js';
-import { Task } from './task.js';
+import { Task, Schedule } from './task.js';
 import { Project } from './project.js';
 
 const openLINodes = [];
@@ -305,8 +305,9 @@ const _loadTaskList = (projectName) => {
         const taskCont = _createElement('div', ['flexCol', 'taskCont'], '', '');
         const liCont = _createElement('div', ['flexRow', 'taskItem'], '', '');
         const descPrev = _createElement('div', ['descPrev'], task.getDescription(), '');
+        const scheduleCont = _createElement('div', ['flexRow', 'descPrev']);
         outerCont.append(checkCont, taskCont);
-        taskCont.append(liCont, descPrev);
+        taskCont.append(liCont, descPrev, scheduleCont);
 
         // setup checkCont
         const buttonCont = _createElement('button', ['clearButton']);
@@ -326,6 +327,11 @@ const _loadTaskList = (projectName) => {
         const editNode = _createElement('i', ['far','fa-edit']);
         const delIcon = _createElement('i', ['far','fa-trash-alt']);
         liCont.append(liNode, editNode, delIcon);
+
+        //setup scheduleCont
+        const calIcon = _createElement('i', ['far', 'fa-calendar-alt']);
+        const taskDate = _createElement('div', ['taskDate'], task.getDate());
+        scheduleCont.append(calIcon, taskDate);
 
         // setup event listeners
             // taskCont hover shows edit and del button
@@ -369,23 +375,63 @@ const _loadAddTaskButton = (projectName) => {
 
         const addPopup = _createEditTaskPopup(projectName, Storage.generateTaskID());
 
+        
+        addCont.replaceWith(addPopup);
+
     })
     
     return addCont;
 
 }
 
-const _createEditTaskPopup = (projectName, taskID) => {
-    //create elements
-    const outerCont = _createElement('div', ['flexCol', 'outerCont']);
-    
-    //top cont
+const _createEditTaskPopup = (projectName, taskID) => {  
+    // create and setup element structures
     const taskInputCont = _createElement('div', ['flexCol']);
     const titleInput = _createElement('input', '');
+    const descInput = _createElement('input', '');
+    const taskButtonCont = _createElement('div', ['flexRow', 'taskButtonCont']);
+    const scheduleCont = _createElement('div', ['flexRow','taskButton']);
+    const calIcon = _createElement('i', ['far', 'fa-calendar-alt']);
+    const dateInput = _createElement('input', ['dateInput'], 'Schedule');
+    dateInput.type = 'date';
+    dateInput.min = Schedule().getDateToday();
+    // FUTURE: add project button here
+    scheduleCont.append(calIcon, dateInput);
+    taskInputCont.append(titleInput, descInput, taskButtonCont);
+    taskButtonCont.append(scheduleCont);
 
-    //bottom cont
-    const buttonCont = _createElement('div', ['flexRow']);
+    const saveButtonCont = _createElement('div', ['flexRow']);
+    const saveButton = _createElement('button', ['saveButton'], 'Save Task');
+    const cancelButton = _createElement('button', ['cancelButton'], 'Cancel');
+    saveButtonCont.append(saveButton, cancelButton);
 
+    const outerCont = _createElement('div', ['flexCol', 'outerCont']);
+    outerCont.append(taskInputCont, saveButtonCont);
+
+    // add event listeners
+    saveButton.addEventListener('click', (event) => {
+        
+        // create new task
+
+        // add to project
+
+        // update project in storage
+
+        // update DOM
+        
+        outerCont.replaceWith(_loadAddTaskButton(projectName));
+    });
+    cancelButton.addEventListener('click', (event) => {
+        
+        outerCont.replaceWith(_loadAddTaskButton(projectName));
+    });
+
+    return outerCont;
+
+}
+
+const _appendTaskDOM = (task) => {
+    // find last task in list and add after
 
 }
 

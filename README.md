@@ -30,6 +30,6 @@ Layout and design inspired by Todoist (todoist.com)
 - [ ] Add click event listener to project li element
 - [ ] keyboard listener for adding task (enter, escape key)
 - [ ] Option to hide completed tasks
-
+- [ ] Add module to format dates
 Future:
 - [ ] View / modify project of a single task (in createAddTaskPopup) 

@@ -3,6 +3,7 @@
 Module responsible for creating a task object and supporting functions
 
 */
+import { formatISO } from 'date-fns'
 
 const Task = (id, title, description, date, priority) => {
     // All tasks default to inbox upon creation
@@ -42,4 +43,15 @@ const Task = (id, title, description, date, priority) => {
     return Object.create(proto);
 }
 
-export { Task };
+const Schedule = () => {
+    const today = new Date(Date.now());
+    const proto = {
+        getDateToday() {
+            return formatISO(today, { representation: 'date'});
+        },
+
+    }
+    return Object.create(proto);
+}
+
+export { Task, Schedule };
