@@ -102,6 +102,9 @@ hr {
     font-size: 14px;
     color: grey;
 }
+.taskDate {
+    margin-left: 5px;
+}
 .clearButton {
     cursor: pointer;
     font-size: 16px;
@@ -119,6 +122,24 @@ hr {
 }
 #addCont:hover {
     color: red;
+}
+.taskButtonCont {
+}
+.taskButton {
+    padding: 0px 2.5px;
+}
+.taskButton i,
+.buttonText {
+    margin: 2.5px 2.5px;
+}
+.dateInput {
+    border: none;
+}
+.saveButton {
+
+}
+.cancelButton {
+    
 }
 
 
