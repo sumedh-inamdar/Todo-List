@@ -39,7 +39,7 @@ header {
     background-color: yellowgreen;
 }
 h4.flexCol {
-    /* margin: 15px 0px 0px; */
+    margin: 15px 0px 0px;
 }
 .projList {
     background-color: teal;
@@ -77,25 +77,26 @@ button {
 }
 
 /* Main Content */
-.task {
+.taskHeader,
+.taskList {
     width: 100%;
     max-width: 600px;
 }
 hr {
     width: 100%;
 }
-.outerCont {
+.taskItem {
     background-color: oldlace;
 }
-.taskItem {
+.taskLI {
     align-items: center;
     background-color: tomato;
 }
-.taskItem li,
+.taskLI li,
 .taskCont {
     flex: 1 0 auto;
 }
-.taskItem i {
+.taskLI i {
     margin: 5px;
 }
 .descPrev {
@@ -120,7 +121,7 @@ hr {
 #addText {
     margin: 0px;
 }
-#addCont:hover {
+#addTask:hover {
     color: red;
 }
 .taskButtonCont {
