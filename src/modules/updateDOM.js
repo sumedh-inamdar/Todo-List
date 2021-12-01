@@ -1,7 +1,7 @@
 // Module responsiblibilities:
 // - Handles updating DOM elements
 // - Updates DOM with current active projects / tasks
-import { createProject, createAddProj, createTask, createHR, createAddTask } from './createDOM'
+import { createProject, createAddProj, createTask, createHR, createAddTask, createAddTaskForm } from './createDOM'
 import { setupProjEventListeners, setupTaskEventListeners } from './eventListeners';
 import { Storage } from './storage'
 import { getTasks } from './appLogic'
@@ -67,5 +67,8 @@ const closeTaskForms = (projID) => {
 
     setupTaskEventListeners();
 }
+const removeTaskForm = (taskForm) => {
+    taskForm.replaceWith(createAddTask());
+}
 
-export { updateProjectList, updateTaskList, closeAllForms, closeProjForms, closeTaskForms };
+export { updateProjectList, updateTaskList, closeAllForms, closeProjForms, closeTaskForms, removeTaskForm };

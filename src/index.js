@@ -42,6 +42,10 @@ const render = (() => {
     Storage.getProject(inbox.getID()).addTask(task1);
     Storage.getProject(inbox.getID()).addTask(task2);
     Storage.getProject(inbox.getID()).addTask(task3);
+
+    Storage.addTaskID('task1');
+    Storage.addTaskID('task2');
+    Storage.addTaskID('task3');
  
     loadApp();
 

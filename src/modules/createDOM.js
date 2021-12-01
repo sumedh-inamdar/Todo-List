@@ -74,7 +74,8 @@ const createProjForm = (projID) => {
     const projInput = _createElement('input', ['inputProj'], '', 'projInput');
     projInput.type = 'text';
     projInput.required = true;
-    projInput.value = Storage.getProjectName(projID);
+    projInput.placeholder = 'Project Name';
+    projInput.value = Storage.projID_exists(projID) ? Storage.getProject(projID).getName() : '';
 
     const saveButton = _createElement('button', '', '',  projID + 'SAVE');
     saveButton.type = 'submit';
@@ -120,7 +121,7 @@ const createTask = (task) => {
 
         const taskID = task.getID();
 
-        const outerCont = _createElement('div', ['flexRow', 'taskItem']);
+        const outerCont = _createElement('div', ['flexRow', 'taskItem'], '', taskID + 'ITEM');
         const checkCont = _createElement('div', ['taskItemLeft']);
         const taskCont = _createElement('div', ['flexCol', 'taskCont'], '', '');
 
@@ -162,7 +163,7 @@ const createHR = () => {
     return _createElement('hr');
 }
 
-const createAddTaskForm = (taskID) => {
+const createAddTaskForm = (taskID, projID) => {
 
     const taskForm = _createElement('form', ['flexCol','taskForm'], '', taskID + 'FORM');
 
@@ -195,6 +196,13 @@ const createAddTaskForm = (taskID) => {
     taskButtonCont.append(scheduleCont);
     saveButtonCont.append(saveButton, cancelButton);
     taskForm.append(taskInputCont, saveButtonCont)
+
+    if (Storage.taskID_exists(taskID)) {
+        const currTask = Storage.getProject(projID).getTask(taskID);
+        titleInput.value = currTask.getTitle();
+        descInput.value = currTask.getDescription();
+        dateInput.value = currTask.getDate();
+    }
 
     return taskForm;
 }

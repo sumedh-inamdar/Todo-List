@@ -8,13 +8,6 @@ const getIndexByID = (projID) => {
     return activeProjects.findIndex(proj => proj.getID() === projID);
 }
 
-const projID_exists = (id) => {
-    return activeProjIDs.includes(id);
-}
-const taskID_exists = (id) => {
-    return activeTaskIDs.includes(id);
-}
-
 const Storage = {
     addTaskID: (id) => {
         activeTaskIDs.push(id);
@@ -28,10 +21,6 @@ const Storage = {
     },
     getProject: (projID) => {
         return activeProjects[getIndexByID(projID)];
-    },
-    getProjectName: (projID) => {
-        const proj = getProject(projID);
-        return proj ? proj.getName() : '';
     },
     checkProjectName: (projName) => {
         return activeProjects.some(project => project.getName() === projName);
@@ -53,7 +42,7 @@ const Storage = {
         let rand;
         do {
             rand = Math.ceil(Math.random() * TASK_LIMIT);
-        } while (taskID_exists(`task${rand}`));
+        } while (Storage.taskID_exists(`task${rand}`));
         
         return `task${rand}`;
     },
@@ -63,10 +52,16 @@ const Storage = {
         let rand;
         do {
             rand = Math.ceil(Math.random() * PROJ_LIMIT);
-        } while (projID_exists(`proj${rand}`));
+        } while (Storage.projID_exists(`proj${rand}`));
         
         return `proj${rand}`;
 
+    },
+    projID_exists: (id) => {
+        return activeProjIDs.includes(id);
+    },
+    taskID_exists: (id) => {
+        return activeTaskIDs.includes(id);
     }
 }
 
