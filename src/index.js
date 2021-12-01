@@ -20,28 +20,30 @@
 
 */
 
-import { DOMLoader } from './modules/DOM.js';
-import { Storage } from './modules/storage.js';
-import { Project } from './modules/project.js';
-import { Task } from './modules/task.js';
-
+import { Storage } from './modules/storage.js'
+import { Project, Inbox } from './modules/project.js'
+import { Task } from './modules/task.js'
+import { loadApp } from './modules/appLogic'
 
 const render = (() => {
     
     // sample projects
-    Storage.addProject(Project('Cleaning'));
-    Storage.addProject(Project('Packing'));
-    Storage.addProject(Project('Mopping'));
+    const inbox = Inbox();
+    Storage.addProject(inbox);
+    Storage.addProject(Project('proj1', 'Cleaning'));
+    Storage.addProject(Project('proj2', 'Packing'));
+    Storage.addProject(Project('proj3', 'Mopping'));
 
     // sample inbox tasks
-    Storage.addInboxTask(Task(1, 'Garbage', 'Take garbage out to street','Dec 8', 'p1'));
-    Storage.addInboxTask(Task(2, 'Bathroom Floors', 'Clean bathroom floors','Dec 9', 'p2'));
-    Storage.addInboxTask(Task(3, 'Kitchen Floors', 'Clean kitchen floors','Wednesday', 'p3'));
-
-    // load DOM elements
-    DOMLoader.loadHeader();
-    DOMLoader.loadSideBar();
-    DOMLoader.loadMain();
+    const task1 = Task('task1', 'Garbage', 'Take garbage out to street','Dec 8', 'p1');
+    const task2 = Task('task2', 'Bathroom Floors', 'Clean bathroom floors','Dec 9', 'p2');
+    const task3 = Task('task3', 'Kitchen Floors', 'Clean kitchen floors','Wednesday', 'p3');
+    
+    Storage.getProject(inbox.getID()).addTask(task1);
+    Storage.getProject(inbox.getID()).addTask(task2);
+    Storage.getProject(inbox.getID()).addTask(task3);
+ 
+    loadApp();
 
 })();
 

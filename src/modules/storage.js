@@ -1,44 +1,72 @@
+const PROJ_LIMIT = 1000;
 const TASK_LIMIT = 10000;
-const inboxTasks = [];
 const activeProjects = [];
-const activeIDs = [];
+const activeTaskIDs = [];
+const activeProjIDs = [];
+
+const getIndexByID = (projID) => {
+    return activeProjects.findIndex(proj => proj.getID() === projID);
+}
+
+const projID_exists = (id) => {
+    return activeProjIDs.includes(id);
+}
+const taskID_exists = (id) => {
+    return activeTaskIDs.includes(id);
+}
 
 const Storage = {
+    addTaskID: (id) => {
+        activeTaskIDs.push(id);
+    },
     addProject: (proj) => {
         activeProjects.push(proj);
+        activeProjIDs.push(proj.getID());
     },
     getProjects: () => {
         return activeProjects;
     },
-    getProject: (projName) => {
-        return activeProjects.find(proj => proj.getName() === projname);
+    getProject: (projID) => {
+        return activeProjects[getIndexByID(projID)];
     },
-    checkProject: (projName) => {
+    getProjectName: (projID) => {
+        const proj = getProject(projID);
+        return proj ? proj.getName() : '';
+    },
+    checkProjectName: (projName) => {
         return activeProjects.some(project => project.getName() === projName);
     },
-    updateProject: (oldProjName, newProjName) => {
-        activeProjects[activeProjects.findIndex(proj => Storage.checkProject(oldProjName))].setName(newProjName);
+    updateProject(projID, newProj) {
+        activeProjects.splice(getIndexByID(projID), 1, newProj);
     },
-    deleteProject: (projName) => {
-        activeProjects.splice(activeProjects.findIndex(proj => Storage.checkProject(projName)), 1);
+    updateProjectName: (projID, newProjName) => {
+        activeProjects[getIndexByID(projID)].setName(newProjName);
     },
-    addInboxTask: (task) => {
-        inboxTasks.push(task);
-        activeIDs.push(task.getID());
-    },
-    getInboxTasks: () => {
-        return inboxTasks;
+    deleteProject: (projID) => {
+        activeProjects.splice(activeProjects.findIndex(proj => proj.getID() === projID), 1);
+        activeProjIDs.splice(activeProjIDs.indexOf(projID), 1)
     },
     generateTaskID: () => {
         
-        if (activeIDs.length >= TASK_LIMIT) return false;
+        if (activeTaskIDs.length >= TASK_LIMIT) return false;
         
         let rand;
         do {
             rand = Math.ceil(Math.random() * TASK_LIMIT);
-        } while (activeIDs.includes(rand));
+        } while (taskID_exists(`task${rand}`));
         
-        return rand;
+        return `task${rand}`;
+    },
+    generateProjID: () => {
+        if (activeProjIDs.length >= PROJ_LIMIT) return false;
+
+        let rand;
+        do {
+            rand = Math.ceil(Math.random() * PROJ_LIMIT);
+        } while (projID_exists(`proj${rand}`));
+        
+        return `proj${rand}`;
+
     }
 }
 

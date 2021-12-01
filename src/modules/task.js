@@ -38,6 +38,12 @@ const Task = (id, title, description, date, priority) => {
         setPriority(pri) {
             priority = pri;
             return priority;
+        },
+        update(newTitle, newDesc, newDate, newPriority) {
+            this.setTitle(newTitle);
+            this.setDescription(newDesc);
+            this.setDate(newDate);
+            this.setPriority(newPriority);
         }
     }
     return Object.create(proto);

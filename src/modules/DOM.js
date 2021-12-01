@@ -41,14 +41,11 @@ const DOMLoader = {
 
         // load task header
         mainContent.appendChild(_loadTaskHeader('Inbox'));
-
         // load task list for inbox
         mainContent.appendChild(_loadTaskList('Inbox'));
             // add edit and delete button upon hover
-
     }
 }
-
 // Setup of Inbox, Today and This week links
 const _loadSideBarNavLinks = () => {
     const navCont = _createElement('div', ['flexCol'],'','sideBarNavCont');
@@ -152,7 +149,7 @@ const createAddProj = () => {
             
             const newProjName = document.querySelector('#inputProj').value;
             console.log('project name being input is: ' + newProjName);
-            if (Storage.checkProject(newProjName)) {
+            if (Storage.checkProjectName(newProjName)) {
                 alert('Project name exists.');
             } else {
                 Storage.addProject(Project(newProjName));
@@ -225,10 +222,10 @@ const editProject = (listItemNode) => {
         
         const newProjName = document.querySelector('#inputProj').value;
         
-        if (Storage.checkProject(newProjName)) {
+        if (Storage.checkProjectName(newProjName)) {
             alert('Project name exists.');
         } else {
-            Storage.updateProject(projName, newProjName);
+            Storage.updateProjectName(projName, newProjName);
 
             const liNode = _createElement('li', '', newProjName, newProjName + 'LI');
     
