@@ -14,7 +14,6 @@ const loadApp = () => {
 }
 const editProject = (event) => {
     
-    event.preventDefault();
     closeAllForms(currActiveProjID);
 
     const currProjID = event.target.id.slice(0,-4);
@@ -48,7 +47,6 @@ const submitProject = (event) => {
 }
 const deleteProject = (event) => {
     
-    event.preventDefault();
     closeAllForms(currActiveProjID);
 
     const projID = event.target.id.slice(0, -3);
@@ -59,7 +57,6 @@ const deleteProject = (event) => {
 }
 const addProject = (event) => {
     
-    event.preventDefault();
     closeAllForms(currActiveProjID);
 
     const addProjLI = event.target;
@@ -81,7 +78,6 @@ const getTasks = (projID) => {
 }
 const addTask = (event) => {
     
-    event.preventDefault();
     closeAllForms(currActiveProjID);
 
     const addTaskDIV = document.querySelector('#addTask');
@@ -118,7 +114,7 @@ const submitTask = (event) => {
 
 }
 const editTask = (event) => {
-    event.preventDefault();
+    
     closeAllForms(currActiveProjID);
 
     const currTaskID = event.target.id.slice(0, -4);
@@ -130,7 +126,18 @@ const editTask = (event) => {
 
 }
 const deleteTask = (event) => {
-    console.log('delete task clicked');
+    
+    closeAllForms(currActiveProjID);
+
+    const taskID = event.target.id.slice(0, -3);
+    // delete task from project
+    const activeProj = Storage.getProject(currActiveProjID);
+    activeProj.removeTask(taskID);
+    Storage.updateProject(currActiveProjID, activeProj);
+    // remove taskID from storage
+    Storage.removeTaskID(taskID);
+    
+    updateTaskList(currActiveProjID);
 }
 
 export { loadApp, editProject, submitProject, deleteProject, addProject, getTasks, addTask, submitTask, editTask, deleteTask }

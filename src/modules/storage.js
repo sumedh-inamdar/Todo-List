@@ -12,6 +12,9 @@ const Storage = {
     addTaskID: (id) => {
         activeTaskIDs.push(id);
     },
+    removeTaskID: (id) => {
+        activeTaskIDs.splice(activeTaskIDs.indexOf(id), 1);
+    },
     addProject: (proj) => {
         activeProjects.push(proj);
         activeProjIDs.push(proj.getID());
