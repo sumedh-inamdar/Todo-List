@@ -1,7 +1,7 @@
 // Module responsiblibilities:
 // - Query elements and setup event listeners
 // - Calls appLogic functions 
-import { editProject, submitProject, deleteProject, addProject, addTask, submitTask, editTask, deleteTask } from './appLogic'
+import { displayProject, editProject, submitProject, deleteProject, addProject, addTask, submitTask, editTask, deleteTask } from './appLogic'
 import { closeProjForms, closeTaskForms } from './updateDOM'
 
 const setupAllEventListeners = () => {
@@ -11,10 +11,12 @@ const setupAllEventListeners = () => {
 const setupProjEventListeners = () => {
 
     // later: setup event listeners for project LI elements
+    const projNodes = document.querySelectorAll('.projItem li');
     const editNodes = document.querySelectorAll('.projItem .fa-edit');
     const delNodes = document.querySelectorAll('.projItem .fa-trash-alt');
     const addProjLI = document.querySelector('#addProjectLI');
 
+    projNodes.forEach(projNode => projNode.addEventListener('click', displayProject))
     editNodes.forEach(editNode => editNode.addEventListener('click', editProject));
     delNodes.forEach(delNode => delNode.addEventListener('click', deleteProject));
     addProjLI.addEventListener('click', addProject);

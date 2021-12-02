@@ -12,8 +12,9 @@ Layout and design inspired by Todoist (todoist.com)
 
 ## Pending tasks
 
-- [ ] Task edit / delete buttons
-- [ ] Project links (event listeners)
+- [x] Task edit / delete buttons
+- [x] Project links (event listeners)
+- [ ] Completed task function
 - [ ] Today / This week
 - [ ] Set task circle color based on priority
 - [ ] Add hover effect to project li element (shows edit and delete button)
@@ -22,3 +23,7 @@ Layout and design inspired by Todoist (todoist.com)
 
 Future:
 - [ ] View / modify project of a single task (in createAddTaskPopup) 
+
+## Bugs to fix
+
+- [ ] Remove Inbox from project list

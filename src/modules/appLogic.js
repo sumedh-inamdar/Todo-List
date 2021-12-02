@@ -12,6 +12,13 @@ const loadApp = () => {
     updateProjectList();
     updateTaskList(currActiveProjID);
 }
+const displayProject = (event) => {
+
+    closeAllForms(currActiveProjID);
+
+    const projID = event.target.id.slice(0, -2);
+    updateTaskList(projID);
+}
 const editProject = (event) => {
     
     closeAllForms(currActiveProjID);
@@ -53,6 +60,7 @@ const deleteProject = (event) => {
     Storage.deleteProject(projID);
 
     updateProjectList();
+    updateTaskList('projInbox');
 
 }
 const addProject = (event) => {
@@ -140,4 +148,4 @@ const deleteTask = (event) => {
     updateTaskList(currActiveProjID);
 }
 
-export { loadApp, editProject, submitProject, deleteProject, addProject, getTasks, addTask, submitTask, editTask, deleteTask }
+export { loadApp, displayProject, editProject, submitProject, deleteProject, addProject, getTasks, addTask, submitTask, editTask, deleteTask }

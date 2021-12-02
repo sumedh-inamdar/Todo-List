@@ -23,6 +23,7 @@ const updateTaskList = (projID) => {
     document.querySelectorAll('.taskItem').forEach(task => task.remove());
     document.querySelectorAll('hr').forEach(hr => hr.remove());
 
+    const mainHeader = document.querySelector('#mainHeader');
     const refNode = document.querySelector('#addTask');
     const parentNode = refNode.parentNode;
 
@@ -32,6 +33,7 @@ const updateTaskList = (projID) => {
         parentNode.insertBefore(createTask(task), refNode);
         parentNode.insertBefore(createHR(), refNode);
     });
+    mainHeader.textContent = Storage.getProject(projID).getName();
 
     // Later
     setupTaskEventListeners();
