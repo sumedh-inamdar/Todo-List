@@ -14,7 +14,7 @@ Layout and design inspired by Todoist (todoist.com)
 
 - [x] Task edit / delete buttons
 - [x] Project links (event listeners)
-- [ ] Completed task function
+- [x] Completed task function
 - [ ] Today / This week
 - [ ] Set task circle color based on priority
 - [ ] Add hover effect to project li element (shows edit and delete button)

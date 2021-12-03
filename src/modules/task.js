@@ -6,7 +6,9 @@ Module responsible for creating a task object and supporting functions
 import { formatISO } from 'date-fns'
 
 const Task = (id, title, description, date, priority) => {
-    // All tasks default to inbox upon creation
+
+    let isComplete = false;
+
     const proto = {
         getID() {
             return id;
@@ -44,6 +46,12 @@ const Task = (id, title, description, date, priority) => {
             this.setDescription(newDesc);
             this.setDate(newDate);
             this.setPriority(newPriority);
+        },
+        isCompleted() {
+            return isComplete;
+        },
+        check() {
+            isComplete = !isComplete;
         }
     }
     return Object.create(proto);

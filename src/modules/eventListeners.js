@@ -1,7 +1,7 @@
 // Module responsiblibilities:
 // - Query elements and setup event listeners
 // - Calls appLogic functions 
-import { displayProject, editProject, submitProject, deleteProject, addProject, addTask, submitTask, editTask, deleteTask } from './appLogic'
+import { displayProject, editProject, submitProject, deleteProject, addProject, addTask, submitTask, editTask, deleteTask, checkTask, toggleCheck } from './appLogic'
 import { closeProjForms, closeTaskForms } from './updateDOM'
 
 const setupAllEventListeners = () => {
@@ -31,10 +31,14 @@ const setupProjFormListener = (projForm) => {
 
 }
 const setupTaskEventListeners = () => {
+    const checkNodes = document.querySelectorAll('.check');
     const editNodes = document.querySelectorAll('.taskItem .fa-edit');
     const delNodes = document.querySelectorAll('.taskItem .fa-trash-alt');
     const addTaskDIV = document.querySelector('#addTask');
 
+    checkNodes.forEach(checkNode => checkNode.addEventListener('mouseenter', toggleCheck));
+    checkNodes.forEach(checkNode => checkNode.addEventListener('mouseleave', toggleCheck));
+    checkNodes.forEach(checkNode => checkNode.addEventListener('click', checkTask));
     editNodes.forEach(editNode => editNode.addEventListener('click', editTask));
     delNodes.forEach(delNode => delNode.addEventListener('click', deleteTask));
     addTaskDIV.addEventListener('click', addTask);

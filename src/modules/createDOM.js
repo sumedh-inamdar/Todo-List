@@ -129,27 +129,18 @@ const createTask = (task) => {
         const descPrev = _createElement('div', ['descPrev'], task.getDescription(), '');
         const scheduleCont = _createElement('div', ['flexRow', 'descPrev']);
 
-        const buttonCont = _createElement('button', ['clearButton'], '', taskID + 'CHECK');
-        const circleMarker = _createElement('i', ['far', 'fa-circle']);
-        const checkMarker = _createElement('i',['far', 'fa-check-circle']);
-
-        // LATER: consider moving to eventListeners module
-        buttonCont.onmouseenter = () => { 
-            circleMarker.replaceWith(checkMarker);
-        };
-        buttonCont.onmouseleave = () => { 
-            checkMarker.replaceWith(circleMarker);
-        };
-
+        const markerClass = task.isCompleted() ? 'fa-check-circle' : 'fa-circle';
+        const circleMarker = _createElement('i',['far', markerClass, 'check'], '', taskID + 'CHECK');
+    
         const liNode = _createElement('li', ['noMarker'], task.getTitle());
+        if (task.isCompleted()) liNode.classList.add('strike');
         const editNode = _createElement('i', ['far','fa-edit'], '', taskID + 'EDIT');
         const delIcon = _createElement('i', ['far','fa-trash-alt'], '', taskID + 'DEL');
         
         const calIcon = _createElement('i', ['far', 'fa-calendar-alt']);
         const taskDate = _createElement('div', ['taskDate'], task.getDate());
 
-        buttonCont.append(circleMarker);
-        checkCont.append(buttonCont);
+        checkCont.append(circleMarker);
 
         liCont.append(liNode, editNode, delIcon);
         scheduleCont.append(calIcon, taskDate);
@@ -159,6 +150,12 @@ const createTask = (task) => {
         
         return outerCont;
 }
+// const createCheckMarker = (taskID) => {
+//     return _createElement('i',['far', 'fa-check-circle', 'check'], '', taskID + 'CHECK');
+// }
+// const createCircleMarker = (taskID) => {
+//     return _createElement('i', ['far', 'fa-circle', 'check'], '', taskID + 'CHECK');
+// }
 const createHR = () => {
     return _createElement('hr');
 }

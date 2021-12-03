@@ -147,5 +147,23 @@ const deleteTask = (event) => {
     
     updateTaskList(currActiveProjID);
 }
+const toggleCheck = (event) => {
 
-export { loadApp, displayProject, editProject, submitProject, deleteProject, addProject, getTasks, addTask, submitTask, editTask, deleteTask }
+    const taskID = event.target.id.slice(0, -5);
+    const task = Storage.getProject(currActiveProjID).getTask(taskID);
+
+    if (!task.isCompleted()) {
+        event.target.classList.toggle('fa-check-circle');
+        event.target.classList.toggle('fa-circle');
+    }
+}
+const checkTask = (event) => {
+    
+    const taskID = event.target.id.slice(0, -5);
+    const task = Storage.getProject(currActiveProjID).getTask(taskID);
+
+    task.check();
+    updateTaskList(currActiveProjID);
+}
+
+export { loadApp, displayProject, editProject, submitProject, deleteProject, addProject, getTasks, addTask, submitTask, editTask, deleteTask, toggleCheck, checkTask }

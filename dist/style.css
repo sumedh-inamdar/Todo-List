@@ -82,6 +82,9 @@ button {
     width: 100%;
     max-width: 600px;
 }
+.strike {
+    text-decoration: line-through;
+}
 hr {
     width: 100%;
 }
