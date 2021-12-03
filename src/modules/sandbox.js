@@ -1,13 +1,4 @@
-const obj = {
-    a: () => {
-        console.log('a');
-    },
-    b: () => {
-        console.log('b');
-    },
-    c: () => {
-        obj.a();
-    }
-}
+import { Schedule } from './task'
 
-obj.c();
+
+Schedule.getFormattedDate('2021-12-04');

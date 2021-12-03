@@ -3,7 +3,7 @@
 Module responsible for creating a task object and supporting functions
 
 */
-import { formatISO } from 'date-fns'
+import { formatISO, parseISO, differenceInCalendarDays, format, isThisYear, isToday } from 'date-fns'
 
 const Task = (id, title, description, date, priority) => {
 
@@ -28,7 +28,7 @@ const Task = (id, title, description, date, priority) => {
             return description;
         },
         getDate() {
-            return date;
+            return Schedule().getFormattedDate(date);
         },
         setDate(newDate) {
             date = newDate;
@@ -63,7 +63,15 @@ const Schedule = () => {
         getDateToday() {
             return formatISO(today, { representation: 'date'});
         },
+        getFormattedDate(date) {
+            const ISODate = parseISO(date);
+            const daysFromToday = differenceInCalendarDays(ISODate, today);
 
+            if (isToday(ISODate)) return 'Today';
+            if (daysFromToday <= 7) return format(ISODate, 'EEEE'); 
+            if (isThisYear(ISODate)) return format(ISODate, 'MMM d');
+            return format(ISODate, 'MMM d y')
+        }
     }
     return Object.create(proto);
 }
