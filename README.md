@@ -17,11 +17,11 @@ Layout and design inspired by Todoist (todoist.com)
 - [x] Project links (event listeners)
 - [x] Completed task function
 - [x] Format dates in DOM
-- [ ] Today / This week
+- [x] Today / This week
 - [ ] Set task circle color based on priority
+- [ ] Sort tasks based on priority / due date
 - [ ] keyboard listener for adding task (enter, escape key)
 - [ ] Option to hide completed tasks
-- [ ] Sort tasks based on priority / due date
 - [ ] Add CSS / styling (beautify)
 - [ ] Add hover effect to project li element (shows edit and delete button)
 
@@ -32,4 +32,4 @@ Future:
 
 ## Bugs to fix
 
-- [ ] Remove Inbox from project list
+- [x] Remove Inbox from project list

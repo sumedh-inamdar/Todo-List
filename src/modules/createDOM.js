@@ -28,9 +28,9 @@ const _createSideBar = () => {
     const sideBar = document.querySelector('#sideBar');
     
     const navCont = _createElement('div', ['flexCol'],'','sideBarNavCont');
-    const inbox = _createElement('div', ['sideBarLink'], 'Inbox');
-    const today = _createElement('div', ['sideBarLink'], 'Today');
-    const thisWeek = _createElement('div', ['sideBarLink'], 'This Week');
+    const inbox = _createElement('div', ['sideBarLink'], 'Inbox', 'projInboxLI');
+    const today = _createElement('div', ['sideBarLink'], 'Today', 'today');
+    const thisWeek = _createElement('div', ['sideBarLink'], 'This Week', 'thisWeek');
 
     const projCont = _createElement('div', ['flexCol'], '', 'projCont');
     const projHeadingCont = _createElement('div');
@@ -138,7 +138,7 @@ const createTask = (task) => {
         const delIcon = _createElement('i', ['far','fa-trash-alt'], '', taskID + 'DEL');
         
         const calIcon = _createElement('i', ['far', 'fa-calendar-alt']);
-        const taskDate = _createElement('div', ['taskDate'], task.getDate());
+        const taskDate = _createElement('div', ['taskDate'], task.getDateDOM());
 
         checkCont.append(circleMarker);
 
@@ -160,7 +160,7 @@ const createHR = () => {
     return _createElement('hr');
 }
 
-const createAddTaskForm = (taskID, projID) => {
+const createAddTaskForm = (taskID, dispID) => {
 
     const taskForm = _createElement('form', ['flexCol','taskForm'], '', taskID + 'FORM');
 
@@ -182,6 +182,8 @@ const createAddTaskForm = (taskID, projID) => {
     const dateInput = _createElement('input', ['dateInput'], 'Schedule', 'taskDate');
     dateInput.type = 'date';
     dateInput.min = Schedule().getDateToday();
+    if (dispID === 'today') dateInput.value = Schedule().getDateToday();
+    // add logic to auto set project to inbox if dispID does not start with 'proj'
 
     const saveButtonCont = _createElement('div', ['flexRow']);
     const saveButton = _createElement('button', ['saveButton'], 'Save Task');
@@ -195,7 +197,7 @@ const createAddTaskForm = (taskID, projID) => {
     taskForm.append(taskInputCont, saveButtonCont)
 
     if (Storage.taskID_exists(taskID)) {
-        const currTask = Storage.getProject(projID).getTask(taskID);
+        const currTask = Storage.getTask(taskID);
         titleInput.value = currTask.getTitle();
         descInput.value = currTask.getDescription();
         dateInput.value = currTask.getDate();

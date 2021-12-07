@@ -3,9 +3,9 @@
 Module responsible for creating a task object and supporting functions
 
 */
-import { formatISO, parseISO, differenceInCalendarDays, format, isThisYear, isToday } from 'date-fns'
+import { formatISO, parseISO, differenceInCalendarDays, format, isThisYear, isToday, isThisWeek } from 'date-fns'
 
-const Task = (id, title, description, date, priority) => {
+const Task = (id, title, description, date, priority, projID) => {
 
     let isComplete = false;
 
@@ -28,7 +28,10 @@ const Task = (id, title, description, date, priority) => {
             return description;
         },
         getDate() {
-            return Schedule().getFormattedDate(date);
+            return date;
+        },
+        getDateDOM() {
+            return date ? Schedule().getFormattedDate(date) : '';
         },
         setDate(newDate) {
             date = newDate;
@@ -41,11 +44,18 @@ const Task = (id, title, description, date, priority) => {
             priority = pri;
             return priority;
         },
-        update(newTitle, newDesc, newDate, newPriority) {
+        getProjID() {
+            return projID;
+        },
+        setProjID(newProjID) {
+            projID = newProjID; 
+        },
+        update(newTitle, newDesc, newDate, newPriority, newProjID) {
             this.setTitle(newTitle);
             this.setDescription(newDesc);
             this.setDate(newDate);
             this.setPriority(newPriority);
+            this.setProjID(newProjID);
         },
         isCompleted() {
             return isComplete;
@@ -64,6 +74,7 @@ const Schedule = () => {
             return formatISO(today, { representation: 'date'});
         },
         getFormattedDate(date) {
+
             const ISODate = parseISO(date);
             const daysFromToday = differenceInCalendarDays(ISODate, today);
 
@@ -71,7 +82,11 @@ const Schedule = () => {
             if (daysFromToday <= 7) return format(ISODate, 'EEEE'); 
             if (isThisYear(ISODate)) return format(ISODate, 'MMM d');
             return format(ISODate, 'MMM d y')
+        },
+        isThisWeek(date) {
+            return isThisWeek(parseISO(date));
         }
+        
     }
     return Object.create(proto);
 }

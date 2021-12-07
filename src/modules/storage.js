@@ -3,6 +3,8 @@ const TASK_LIMIT = 10000;
 const activeProjects = [];
 const activeTaskIDs = [];
 const activeProjIDs = [];
+const tasks_today = []; // array of obj's with properties (projID and tasks - array of taskIDs)
+const task_thisWeek = []; // same as above
 
 const getIndexByID = (projID) => {
     return activeProjects.findIndex(proj => proj.getID() === projID);
@@ -37,6 +39,9 @@ const Storage = {
     deleteProject: (projID) => {
         activeProjects.splice(activeProjects.findIndex(proj => proj.getID() === projID), 1);
         activeProjIDs.splice(activeProjIDs.indexOf(projID), 1)
+    },
+    getTask: (taskID) => {
+        if (activeTaskIDs.includes(taskID)) return activeProjects.find(proj => proj.getTask(taskID)).getTask(taskID);
     },
     generateTaskID: () => {
         

@@ -22,7 +22,6 @@ const proto = (state) => {
             return state.tasks.find(task => task.getID() === taskID);
         },
         updateTask: (taskID, newTask) => {
-            // need to fix error with getIndexByID (can't access this)
             state.tasks.splice(getIndexByID(state, taskID), 1, newTask);  
         },
         addTask: (task) => {

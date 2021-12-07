@@ -1,12 +1,21 @@
 // Module responsiblibilities:
 // - Query elements and setup event listeners
 // - Calls appLogic functions 
-import { displayProject, editProject, submitProject, deleteProject, addProject, addTask, submitTask, editTask, deleteTask, checkTask, toggleCheck } from './appLogic'
+import { displayProject, editProject, submitProject, deleteProject, addProject, addTask, submitTask, editTask, deleteTask, checkTask, toggleCheck, displayToday, displayThisWeek } from './appLogic'
 import { closeProjForms, closeTaskForms } from './updateDOM'
 
-const setupAllEventListeners = () => {
-    setupProjEventListeners();
-    setupTaskEventListeners();
+// const setupAllEventListeners = () => {
+//     setupProjEventListeners();
+//     setupTaskEventListeners();
+// }
+const setupNavEventListeners = () => {
+    const inboxNode = document.querySelector('#projInboxLI');
+    const todayNode = document.querySelector('#today');
+    const thisWeekNode = document.querySelector('#thisWeek');
+
+    inboxNode.addEventListener('click', displayProject);
+    todayNode.addEventListener('click', displayToday);
+    thisWeekNode.addEventListener('click', displayThisWeek);
 }
 const setupProjEventListeners = () => {
 
@@ -30,7 +39,7 @@ const setupProjFormListener = (projForm) => {
     projForm.addEventListener('submit', submitProject);
 
 }
-const setupTaskEventListeners = () => {
+const setupTaskEventListeners = (dispID) => {
     const checkNodes = document.querySelectorAll('.check');
     const editNodes = document.querySelectorAll('.taskItem .fa-edit');
     const delNodes = document.querySelectorAll('.taskItem .fa-trash-alt');
@@ -41,15 +50,15 @@ const setupTaskEventListeners = () => {
     checkNodes.forEach(checkNode => checkNode.addEventListener('click', checkTask));
     editNodes.forEach(editNode => editNode.addEventListener('click', editTask));
     delNodes.forEach(delNode => delNode.addEventListener('click', deleteTask));
-    addTaskDIV.addEventListener('click', addTask);
+    addTaskDIV.addEventListener('click', () => addTask(dispID));
 }
-const setupTaskFormListener = (projID, taskForm) => {
+const setupTaskFormListener = (taskForm, dispID) => {
     const taskID = taskForm.id.slice(0, -4);
     const cancelButton = document.querySelector(`#${taskID}CANCEL`);
 
-    cancelButton.addEventListener('click', () => closeTaskForms(projID));
+    cancelButton.addEventListener('click', () => closeTaskForms());
 
-    taskForm.addEventListener('submit', submitTask);
+    taskForm.addEventListener('submit', (e) => submitTask(e, dispID));
 }
 
-export { setupAllEventListeners, setupProjEventListeners, setupProjFormListener, setupTaskEventListeners, setupTaskFormListener };
+export { setupProjEventListeners, setupProjFormListener, setupTaskEventListeners, setupTaskFormListener, setupNavEventListeners };

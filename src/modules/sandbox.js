@@ -1,4 +1,8 @@
-import { Schedule } from './task'
+a = [ { a: 5, b: 2}, { c: 8, d: 6}];
+b = a;
 
+console.table({a, b});
 
-Schedule.getFormattedDate('2021-12-04');
+b[0] = { d: 4, e: 9 };
+
+console.table({a, b});

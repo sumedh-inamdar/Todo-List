@@ -1,27 +1,37 @@
 import { updateProjectList, updateTaskList, closeAllForms, removeTaskForm } from './updateDOM'
 import { createDOM, createAddProj, createProjForm, createAddTaskForm } from './createDOM'
-import { setupAllEventListeners, setupProjEventListeners, setupProjFormListener, setupTaskFormListener } from './eventListeners'
+import { setupProjEventListeners, setupProjFormListener, setupTaskFormListener, setupNavEventListeners } from './eventListeners'
 import { Storage } from './storage'
 import { Project } from './project'
-import { Task } from './task'
+import { Schedule, Task } from './task'
 
 let currActiveProjID = 'projInbox';
 
 const loadApp = () => {
     createDOM();
+    setupNavEventListeners(); // nav corresponds to ('inbox, 'today', 'this week')
     updateProjectList();
-    updateTaskList(currActiveProjID);
+    updateTaskList('projInbox');
 }
 const displayProject = (event) => {
 
-    closeAllForms(currActiveProjID);
-
+    closeAllForms();
     const projID = event.target.id.slice(0, -2);
     updateTaskList(projID);
 }
+const displayToday = (event) => {
+    
+    closeAllForms();
+    updateTaskList('Today');
+
+}
+const displayThisWeek = (event) => {
+    closeAllForms();
+    updateTaskList('This Week');
+}
 const editProject = (event) => {
     
-    closeAllForms(currActiveProjID);
+    closeAllForms();
 
     const currProjID = event.target.id.slice(0,-4);
     const liNode = document.querySelector(`#${currProjID}LI`);
@@ -54,7 +64,7 @@ const submitProject = (event) => {
 }
 const deleteProject = (event) => {
     
-    closeAllForms(currActiveProjID);
+    closeAllForms();
 
     const projID = event.target.id.slice(0, -3);
     Storage.deleteProject(projID);
@@ -65,7 +75,7 @@ const deleteProject = (event) => {
 }
 const addProject = (event) => {
     
-    closeAllForms(currActiveProjID);
+    closeAllForms();
 
     const addProjLI = event.target;
     const projID = Storage.generateProjID();
@@ -77,80 +87,106 @@ const addProject = (event) => {
 
 }
 const getTasks = (projID) => {
-    
-    currActiveProjID = projID;
 
-    return Storage.getProject(projID).getTasks();
+    if (projID.startsWith('proj')) {
+        return Storage.getProject(projID).getTasks();
 
-    // Later: Setup Today and This week task fetch logic
+    } else if (projID === 'Today') {
+        const allTasks = Storage.getProjects().map(proj => proj.getTasks()).flat();
+        const tasksToday = allTasks.filter(task => task.getDate() === Schedule().getDateToday());
+
+        return tasksToday;
+
+    } else if (projID === 'This Week') {
+        const allTasks = Storage.getProjects().map(proj => proj.getTasks()).flat();
+        const tasksThisWeek = allTasks.filter(task => Schedule().isThisWeek(task.getDate()));
+        
+        return tasksThisWeek;
+    }
 }
-const addTask = (event) => {
+const addTask = (dispID) => {
     
-    closeAllForms(currActiveProjID);
+    closeAllForms();
 
     const addTaskDIV = document.querySelector('#addTask');
     const taskID = Storage.generateTaskID();
-    const taskForm = createAddTaskForm(taskID, currActiveProjID);
+    const taskForm = createAddTaskForm(taskID, dispID);
 
     addTaskDIV.replaceWith(taskForm);
-    setupTaskFormListener(currActiveProjID, taskForm);
+    setupTaskFormListener(taskForm, dispID);
 
 }
-const submitTask = (event) => {
+// Need to refactor this function when we add ability to change project for each Task
+// add task (need to add to curr active project)
+// edit task (update task with values from form)
+const submitTask = (event, dispID) => {
     event.preventDefault();
-
-    const currProj = Storage.getProject(currActiveProjID);
 
     const taskID = event.target.id.slice(0, -4);
     const taskTitle = document.querySelector('#taskTitle').value;
     const taskDesc = document.querySelector('#taskDesc').value;
     const taskDate = document.querySelector('#taskDate').value;
+    const taskPriority = 'p1'; // temp const
+    // checks if dispID is an actual project or ('Today', 'This Week')
+    const isTypeProj = dispID.startsWith('proj');
+    let taskProj = isTypeProj ? dispID : 'projInbox'; // temp const
 
-    if (currProj.getTask(taskID)) {
-        const newTask = currProj.getTask(taskID);
-        newTask.update(taskTitle, taskDesc, taskDate);
-        currProj.updateTask(taskID, newTask);
+    if (Storage.taskID_exists(taskID)) {
+
+        const newTask = Storage.getTask(taskID);
+        const currProjID = newTask.getProjID();
+        taskProj = isTypeProj ? dispID : currProjID;
+        newTask.update(taskTitle, taskDesc, taskDate, taskPriority, taskProj);
+
+        if (taskProj === currProjID) { // checks if user changed project of task
+            Storage.getProject(taskProj).updateTask(taskID, newTask);
+        } else {
+            Storage.getProject(currProjID).removeTask(taskID);
+            Storage.getProject(taskProj).addTask(taskID);
+        }
     } else {
-        const newTask = Task(taskID, taskTitle, taskDesc, taskDate);
-        currProj.addTask(newTask);
+        const newTask = Task(taskID, taskTitle, taskDesc, taskDate, taskPriority, taskProj);
+        Storage.getProject(taskProj).addTask(newTask);
         Storage.addTaskID(taskID);
         removeTaskForm(event.target);
     }
-
-    Storage.updateProject(currActiveProjID, currProj);
-    updateTaskList(currActiveProjID);
+    updateTaskList();
 
 }
 const editTask = (event) => {
     
-    closeAllForms(currActiveProjID);
+    closeAllForms();
 
     const currTaskID = event.target.id.slice(0, -4);
     const currTaskItem = document.querySelector(`#${currTaskID}ITEM`);
-    const taskForm = createAddTaskForm(currTaskID, currActiveProjID);
+    const currProjID = Storage.getTask(currTaskID).getProjID();
+    const taskForm = createAddTaskForm(currTaskID, currProjID);
     currTaskItem.replaceWith(taskForm);
 
-    setupTaskFormListener(currActiveProjID, taskForm);
+    setupTaskFormListener(taskForm, currProjID);
 
 }
 const deleteTask = (event) => {
     
-    closeAllForms(currActiveProjID);
+    closeAllForms();
 
     const taskID = event.target.id.slice(0, -3);
+
     // delete task from project
-    const activeProj = Storage.getProject(currActiveProjID);
+    const activeProjID = Storage.getTask(taskID).getProjID();
+    const activeProj = Storage.getProject(activeProjID);
     activeProj.removeTask(taskID);
-    Storage.updateProject(currActiveProjID, activeProj);
+    Storage.updateProject(activeProjID, activeProj);
+
     // remove taskID from storage
     Storage.removeTaskID(taskID);
     
-    updateTaskList(currActiveProjID);
+    updateTaskList();
 }
 const toggleCheck = (event) => {
 
     const taskID = event.target.id.slice(0, -5);
-    const task = Storage.getProject(currActiveProjID).getTask(taskID);
+    const task = Storage.getTask(taskID);
 
     if (!task.isCompleted()) {
         event.target.classList.toggle('fa-check-circle');
@@ -160,10 +196,11 @@ const toggleCheck = (event) => {
 const checkTask = (event) => {
     
     const taskID = event.target.id.slice(0, -5);
-    const task = Storage.getProject(currActiveProjID).getTask(taskID);
+    const task = Storage.getTask(taskID);
 
     task.check();
-    updateTaskList(currActiveProjID);
+    updateTaskList();
 }
 
-export { loadApp, displayProject, editProject, submitProject, deleteProject, addProject, getTasks, addTask, submitTask, editTask, deleteTask, toggleCheck, checkTask }
+
+export { loadApp, displayProject, editProject, submitProject, deleteProject, addProject, getTasks, addTask, submitTask, editTask, deleteTask, toggleCheck, checkTask, displayToday, displayThisWeek }

@@ -1,10 +1,12 @@
 // Module responsiblibilities:
 // - Handles updating DOM elements
 // - Updates DOM with current active projects / tasks
-import { createProject, createAddProj, createTask, createHR, createAddTask, createAddTaskForm } from './createDOM'
+import { createProject, createAddProj, createTask, createHR, createAddTask } from './createDOM'
 import { setupProjEventListeners, setupTaskEventListeners } from './eventListeners';
 import { Storage } from './storage'
 import { getTasks } from './appLogic'
+
+let currDispID = 'projInbox';
 
 const updateProjectList = () => {
 
@@ -13,34 +15,45 @@ const updateProjectList = () => {
     const refNode = document.querySelector('#addProj');
     const parentNode = refNode.parentNode;
 
-    Storage.getProjects().forEach(proj => parentNode.insertBefore(createProject(proj), refNode));
+    Storage.getProjects().forEach(proj => {
+        if(proj.getID() !== 'projInbox') parentNode.insertBefore(createProject(proj), refNode);
+    });
 
     setupProjEventListeners();
 }
-const updateTaskList = (projID) => {
+const updateTaskList = (dispID) => {
 
-    closeTaskForms(projID);
+    if(dispID) currDispID = dispID;
+
+    const headerName = currDispID.startsWith('proj') ? Storage.getProject(currDispID).getName() : currDispID;
+
+    closeTaskForms();
+    removeTaskItems();
+    addTaskItems(getTasks(currDispID));
+    updateHeader(headerName);
+    setupTaskEventListeners(currDispID);
+}
+const removeTaskItems = () => {
     document.querySelectorAll('.taskItem').forEach(task => task.remove());
     document.querySelectorAll('hr').forEach(hr => hr.remove());
+}
+const addTaskItems = (activeTasks) => {
 
-    const mainHeader = document.querySelector('#mainHeader');
     const refNode = document.querySelector('#addTask');
     const parentNode = refNode.parentNode;
-
-    const activeTasks = getTasks(projID);
 
     activeTasks.forEach(task => {
         parentNode.insertBefore(createTask(task), refNode);
         parentNode.insertBefore(createHR(), refNode);
     });
-    mainHeader.textContent = Storage.getProject(projID).getName();
-
-    // Later
-    setupTaskEventListeners();
 }
-const closeAllForms = (projID) => {
+const updateHeader = (headerName) => {
+    const mainHeader = document.querySelector('#mainHeader');
+    mainHeader.textContent = headerName;
+}
+const closeAllForms = () => {
     closeProjForms();
-    closeTaskForms(projID);
+    closeTaskForms();
 }
 const closeProjForms = () => {
     
@@ -56,18 +69,18 @@ const closeProjForms = () => {
 
     setupProjEventListeners();
 }
-const closeTaskForms = (projID) => {
+const closeTaskForms = () => {
     const taskForms = document.querySelectorAll('.taskForm');
 
     taskForms.forEach(taskForm => {
         const taskID = taskForm.id.slice(0, -4);
-        const task = Storage.getProject(projID).getTask(taskID);
+        const task = Storage.getTask(taskID);
         const taskDIV = task ? createTask(task) : createAddTask();
 
         taskForm.replaceWith(taskDIV);
     })
 
-    setupTaskEventListeners();
+    setupTaskEventListeners(currDispID);
 }
 const removeTaskForm = (taskForm) => {
     taskForm.replaceWith(createAddTask());

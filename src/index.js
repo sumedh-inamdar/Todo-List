@@ -22,7 +22,7 @@
 
 import { Storage } from './modules/storage.js'
 import { Project, Inbox } from './modules/project.js'
-import { Schedule, Task } from './modules/task.js'
+import { Task } from './modules/task.js'
 import { loadApp } from './modules/appLogic'
 
 const render = (() => {
@@ -35,10 +35,10 @@ const render = (() => {
     Storage.addProject(Project('proj3', 'Mopping'));
 
     // sample inbox tasks
-    const task1 = Task('task1', 'Garbage', 'Take garbage out to street','2021-12-08', 'p1');
-    const task2 = Task('task2', 'Bathroom Floors', 'Clean bathroom floors','2021-12-09', 'p2');
-    const task3 = Task('task3', 'Kitchen Floors', 'Clean kitchen floors','2021-12-31', 'p3');
-    const task4 = Task('task4', 'Vacation', 'Buy ticket to Mexico','2022-01-28', 'p3');
+    const task1 = Task('task1', 'Garbage', 'Take garbage out to street','2021-12-08', 'p1', 'projInbox');
+    const task2 = Task('task2', 'Bathroom Floors', 'Clean bathroom floors','2021-12-09', 'p2', 'projInbox');
+    const task3 = Task('task3', 'Kitchen Floors', 'Clean kitchen floors','2021-12-31', 'p3', 'projInbox');
+    const task4 = Task('task4', 'Vacation', 'Buy ticket to Mexico','2022-01-28', 'p3', 'projInbox');
     
     Storage.getProject(inbox.getID()).addTask(task1);
     Storage.getProject(inbox.getID()).addTask(task2);
@@ -48,6 +48,7 @@ const render = (() => {
     Storage.addTaskID('task1');
     Storage.addTaskID('task2');
     Storage.addTaskID('task3');
+    Storage.addTaskID('task4');
  
     loadApp();
 
