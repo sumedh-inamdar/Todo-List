@@ -130,15 +130,64 @@ hr {
 .taskButtonCont {
 }
 .taskButton {
-    padding: 0px 2.5px;
+    align-items: center;
+    padding: 2.5px 2.5px;
+    border: 1px solid black;
+    border-radius: 5px;
+    margin: 5px;
+    background-color: white;
 }
-.taskButton i,
-.buttonText {
+.taskButton > * {
     margin: 2.5px 2.5px;
+}
+.projSelCont {
+    cursor: pointer;
+}
+.dropdown {
+    position: relative;
+    cursor: pointer;
+}
+.dropdown-menu {
+    position: absolute;
+    left: 5px;
+    top: 100%;
+    background-color: white;
+    padding: .25rem;
+    border-radius: .25rem;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .2);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-10px);
+    transition: opacity 150ms ease-in-out, transform 150ms ease-in-out;
+}
+.dropdown.active > .taskButton + .dropdown-menu {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+.dropdown-item
+{
+    align-items: center;
+    padding: 2.5px 2.5px;
+    border: 1px solid gray;
+    border-radius: 5px;
+    margin: 5px;
+    background-color: white;
+}
+.dropdown-item:hover {
+    background-color: rgb(0, 183, 255);
+}
+.dropdown-item > * {
+    margin: 0px 5px;
+}
+#taskDate {
+    padding: 0px;
 }
 .dateInput {
     border: none;
 }
+
+
 .saveButton {
 
 }

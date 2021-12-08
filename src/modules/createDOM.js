@@ -183,16 +183,23 @@ const createAddTaskForm = (taskID, dispID) => {
     dateInput.type = 'date';
     dateInput.min = Schedule().getDateToday();
     if (dispID === 'today') dateInput.value = Schedule().getDateToday();
-    // add logic to auto set project to inbox if dispID does not start with 'proj'
+    
+    const dropdown = _createElement('div', ['dropdown']);
+    const dropdownMenu = _createElement('div', ['dropdown-menu']);
+    populateDropdown(dropdownMenu);
 
+    const projID = dispID.startsWith('proj') ? dispID : 'projInbox';
+    const projCont = createProjSelectButton(projID);
+    
     const saveButtonCont = _createElement('div', ['flexRow']);
     const saveButton = _createElement('button', ['saveButton'], 'Save Task');
     saveButton.type = 'submit';
     const cancelButton = _createElement('button', ['cancelButton'], 'Cancel', taskID + 'CANCEL');
 
     scheduleCont.append(calIcon, dateInput);
+    dropdown.append(projCont, dropdownMenu);
+    taskButtonCont.append(scheduleCont, dropdown);
     taskInputCont.append(titleInput, descInput, taskButtonCont);
-    taskButtonCont.append(scheduleCont);
     saveButtonCont.append(saveButton, cancelButton);
     taskForm.append(taskInputCont, saveButtonCont)
 
@@ -205,5 +212,36 @@ const createAddTaskForm = (taskID, dispID) => {
 
     return taskForm;
 }
+const populateDropdown = (dropdown) => {
+    const projList = Storage.getProjects();
 
-export { createDOM, createProject, createAddProj, createProjForm, createAddTask, createTask, createHR, createAddTaskForm };
+    projList.forEach(proj => {
+        const inboxIcon = _createElement('i', ['fas', 'fa-inbox']);
+        const projIcon = _createElement('i', ['far', 'fa-dot-circle']);
+        let projName = proj.getName();
+        let projID = proj.getID();
+
+        let projItem = _createElement('div', ['flexRow', 'dropdown-item'], '', projID + 'dropdown');
+        let icon = projID === 'projInbox' ? inboxIcon : projIcon;
+        let projText = _createElement('div', '', projName);
+
+        projItem.append(icon, projText);
+        dropdown.append(projItem);
+    })
+}
+const createProjSelectButton = (projID) => {
+    
+    const projCont = _createElement('button', ['flexRow', 'projSelCont', 'taskButton'], '', projID + 'SELECT');
+    const inboxIcon = _createElement('i', ['fas', 'fa-inbox']);
+    const projIcon = _createElement('i', ['far', 'fa-dot-circle']);
+    const icon = projID === 'projInbox' ? inboxIcon : projIcon;
+    const projText = _createElement('div', '', Storage.getProject(projID).getName(), projID + 'TEXT');
+    
+    projCont.append(icon, projText);
+    
+    return projCont;
+}
+
+
+
+export { createDOM, createProject, createAddProj, createProjForm, createAddTask, createTask, createHR, createAddTaskForm, createProjSelectButton };

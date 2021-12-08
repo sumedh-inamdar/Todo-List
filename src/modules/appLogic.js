@@ -128,21 +128,21 @@ const submitTask = (event, dispID) => {
     const taskDate = document.querySelector('#taskDate').value;
     const taskPriority = 'p1'; // temp const
     // checks if dispID is an actual project or ('Today', 'This Week')
-    const isTypeProj = dispID.startsWith('proj');
-    let taskProj = isTypeProj ? dispID : 'projInbox'; // temp const
+    // const isTypeProj = dispID.startsWith('proj');
+    const taskProj = document.querySelector('.projSelCont').id.slice(0, -6); 
 
     if (Storage.taskID_exists(taskID)) {
 
         const newTask = Storage.getTask(taskID);
         const currProjID = newTask.getProjID();
-        taskProj = isTypeProj ? dispID : currProjID;
+        // taskProj = isTypeProj ? dispID : currProjID;
         newTask.update(taskTitle, taskDesc, taskDate, taskPriority, taskProj);
 
         if (taskProj === currProjID) { // checks if user changed project of task
             Storage.getProject(taskProj).updateTask(taskID, newTask);
         } else {
             Storage.getProject(currProjID).removeTask(taskID);
-            Storage.getProject(taskProj).addTask(taskID);
+            Storage.getProject(taskProj).addTask(newTask);
         }
     } else {
         const newTask = Task(taskID, taskTitle, taskDesc, taskDate, taskPriority, taskProj);

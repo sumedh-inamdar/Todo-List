@@ -2,7 +2,7 @@
 // - Query elements and setup event listeners
 // - Calls appLogic functions 
 import { displayProject, editProject, submitProject, deleteProject, addProject, addTask, submitTask, editTask, deleteTask, checkTask, toggleCheck, displayToday, displayThisWeek } from './appLogic'
-import { closeProjForms, closeTaskForms } from './updateDOM'
+import { closeProjForms, closeTaskForms, updateProjDropdown } from './updateDOM'
 
 // const setupAllEventListeners = () => {
 //     setupProjEventListeners();
@@ -55,10 +55,39 @@ const setupTaskEventListeners = (dispID) => {
 const setupTaskFormListener = (taskForm, dispID) => {
     const taskID = taskForm.id.slice(0, -4);
     const cancelButton = document.querySelector(`#${taskID}CANCEL`);
+    const projDropdown = document.querySelector('.projSelCont');
 
     cancelButton.addEventListener('click', () => closeTaskForms());
-
     taskForm.addEventListener('submit', (e) => submitTask(e, dispID));
+    document.addEventListener('click', setupDropdownListener);
+}
+
+const setupDropdownListener = (event) => {
+    // figure out how to enable other listeners in form
+    const isDropDownButton = event.target.closest('.projSelCont');
+    const isDropDownItem = event.target.closest('.dropdown-item');
+    const isTaskForm = event.target.closest('.taskForm');
+    // if (!isDropDownButton && event.target.closest('.dropdown') != null) return; // do nothing if click is inside dropdown menu
+
+    if (isDropDownItem) {
+        const selectedProjID = isDropDownItem.id.slice(0, -8);
+        updateProjDropdown(selectedProjID);
+    }
+    
+    let currentDropdown;
+    if (isDropDownButton) {
+        currentDropdown = event.target.closest('.dropdown');
+        currentDropdown.classList.toggle('active');
+    }
+
+    document.querySelectorAll('.dropdown.active').forEach(dropDown => {
+        if (dropDown === currentDropdown) return;
+        dropDown.classList.remove('active');
+    })
+
+    if (isTaskForm && !isDropDownButton) return; // allows other form click events to occur
+    event.preventDefault();
+
 }
 
 export { setupProjEventListeners, setupProjFormListener, setupTaskEventListeners, setupTaskFormListener, setupNavEventListeners };

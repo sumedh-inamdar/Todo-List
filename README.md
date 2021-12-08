@@ -18,16 +18,13 @@ Layout and design inspired by Todoist (todoist.com)
 - [x] Completed task function
 - [x] Format dates in DOM
 - [x] Today / This week
+- [x] View / modify project of a single task 
 - [ ] Set task circle color based on priority
 - [ ] Sort tasks based on priority / due date
 - [ ] keyboard listener for adding task (enter, escape key)
 - [ ] Option to hide completed tasks
 - [ ] Add CSS / styling (beautify)
 - [ ] Add hover effect to project li element (shows edit and delete button)
-
-Future:
-- [ ] View / modify project of a single task (in createAddTaskPopup) 
-
 
 
 ## Bugs to fix
