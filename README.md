@@ -20,7 +20,7 @@ Layout and design inspired by Todoist (todoist.com)
 - [x] Today / This week
 - [x] View / modify project of a single task 
 - [x] Add dropdown for task priority selection
-- [ ] Set task circle color based on priority
+- [x] Set task circle color based on priority
 - [ ] Sort tasks based on priority / due date
 - [ ] keyboard listener for adding task (enter, escape key)
 - [ ] Add CSS / styling (beautify)
@@ -29,6 +29,7 @@ Layout and design inspired by Todoist (todoist.com)
 ## Future features
 
 - [ ] Option to hide completed tasks
+- [ ] SVG to replace circle markers (to enable custom fill colors, etc)
 
 ## Bugs to fix
 

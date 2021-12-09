@@ -186,6 +186,8 @@ const toggleCheck = (event) => {
     const task = Storage.getTask(taskID);
 
     if (!task.isCompleted()) {
+        // event.target.classList.toggle('far');
+        // event.target.classList.toggle('fas');
         event.target.classList.toggle('fa-check-circle');
         event.target.classList.toggle('fa-circle');
     }

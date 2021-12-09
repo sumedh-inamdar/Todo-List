@@ -130,8 +130,10 @@ const createTask = (task) => {
         const descPrev = _createElement('div', ['descPrev'], task.getDescription(), '');
         const scheduleCont = _createElement('div', ['flexRow', 'descPrev']);
 
+
         const markerClass = task.isCompleted() ? 'fa-check-circle' : 'fa-circle';
-        const circleMarker = _createElement('i',['far', markerClass, 'check'], '', taskID + 'CHECK');
+        const outerCircle = _createElement('i',['far', markerClass, 'check'], '', taskID + 'CHECK');
+        applyPriorityColorToMarker(outerCircle, task.getPriority());
     
         const liNode = _createElement('li', ['noMarker'], task.getTitle());
         if (task.isCompleted()) liNode.classList.add('strike');
@@ -141,7 +143,7 @@ const createTask = (task) => {
         const calIcon = _createElement('i', ['far', 'fa-calendar-alt']);
         const taskDate = _createElement('div', ['taskDate'], task.getDateDOM());
 
-        checkCont.append(circleMarker);
+        checkCont.append(outerCircle);
 
         liCont.append(liNode, editNode, delIcon);
         scheduleCont.append(calIcon, taskDate);
@@ -151,12 +153,13 @@ const createTask = (task) => {
         
         return outerCont;
 }
-// const createCheckMarker = (taskID) => {
-//     return _createElement('i',['far', 'fa-check-circle', 'check'], '', taskID + 'CHECK');
-// }
-// const createCircleMarker = (taskID) => {
-//     return _createElement('i', ['far', 'fa-circle', 'check'], '', taskID + 'CHECK');
-// }
+const applyPriorityColorToMarker = (marker, priority) => {
+    
+    if (marker.classList.contains('fa-check-circle')) marker.style.fontWeight = 'bold';
+    marker.style.color = getPriorityInfo(priority)[1];
+    marker.style.backgroundColor = getPriorityInfo(priority)[1] + '34';
+    
+}
 const createHR = () => {
     return _createElement('hr');
 }
@@ -277,11 +280,11 @@ const getPriorityInfo = (priority) => {
     
     switch (priority) {
         case 'p1':
-            return ['Priority 1', 'red'];
+            return ['Priority 1', '#ff3300'];
         case 'p2':
-            return ['Priority 2', 'orange'];
+            return ['Priority 2', '#df9100'];
         case 'p3':
-            return ['Priority 3', 'blue'];
+            return ['Priority 3', '#0000ff'];
         case 'p4':
             return ['Priority 4', 'gray'];
     }
