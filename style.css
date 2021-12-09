@@ -197,14 +197,17 @@ hr {
     border: none;
 }
 
-
 .saveButton {
-
 }
 .cancelButton {
     
 }
-
+.fa-circle,
+.fa-check-circle {
+    font-size: 1.2em;
+    padding: 3px;
+    border-radius: 5px;
+}
 
 footer {
     flex: 0 0 2rem;
