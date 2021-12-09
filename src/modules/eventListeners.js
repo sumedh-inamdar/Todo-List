@@ -2,7 +2,7 @@
 // - Query elements and setup event listeners
 // - Calls appLogic functions 
 import { displayProject, editProject, submitProject, deleteProject, addProject, addTask, submitTask, editTask, deleteTask, checkTask, toggleCheck, displayToday, displayThisWeek } from './appLogic'
-import { closeProjForms, closeTaskForms, updateProjDropdown } from './updateDOM'
+import { closeProjForms, closeTaskForms, updateProjDropdown, updatePriDropdown } from './updateDOM'
 
 // const setupAllEventListeners = () => {
 //     setupProjEventListeners();
@@ -51,6 +51,8 @@ const setupTaskEventListeners = (dispID) => {
     editNodes.forEach(editNode => editNode.addEventListener('click', editTask));
     delNodes.forEach(delNode => delNode.addEventListener('click', deleteTask));
     addTaskDIV.addEventListener('click', () => addTask(dispID));
+
+    document.removeEventListener('click', setupDropdownListener);
 }
 const setupTaskFormListener = (taskForm, dispID) => {
     const taskID = taskForm.id.slice(0, -4);
@@ -64,14 +66,21 @@ const setupTaskFormListener = (taskForm, dispID) => {
 
 const setupDropdownListener = (event) => {
     // figure out how to enable other listeners in form
-    const isDropDownButton = event.target.closest('.projSelCont');
+    const isDropDownButton = event.target.closest('.dropdown');
     const isDropDownItem = event.target.closest('.dropdown-item');
     const isTaskForm = event.target.closest('.taskForm');
     // if (!isDropDownButton && event.target.closest('.dropdown') != null) return; // do nothing if click is inside dropdown menu
 
     if (isDropDownItem) {
-        const selectedProjID = isDropDownItem.id.slice(0, -8);
-        updateProjDropdown(selectedProjID);
+        
+        if (isDropDownItem.closest('.menu-proj')) {
+            const selectedProjID = isDropDownItem.id.slice(0, -8);
+            updateProjDropdown(selectedProjID);    
+        } else if(isDropDownItem.closest('.menu-pri')) {
+            // const selectedTaskID = isDropDownItem.closest('.taskForm').id.slice(0, -4);
+            const selectedPriority = isDropDownItem.id;
+            updatePriDropdown(selectedPriority);
+        }
     }
     
     let currentDropdown;

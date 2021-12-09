@@ -4,6 +4,7 @@
 // - Loads active projects and tasks
 import { Storage } from './storage'
 import { Schedule } from './task'
+import { updatePriDropdown } from './updateDOM';
 
 const _createElement = (type, classNameArr, text, id) => {
     const element = document.createElement(type);
@@ -184,35 +185,42 @@ const createAddTaskForm = (taskID, dispID) => {
     dateInput.min = Schedule().getDateToday();
     if (dispID === 'today') dateInput.value = Schedule().getDateToday();
     
-    const dropdown = _createElement('div', ['dropdown']);
-    const dropdownMenu = _createElement('div', ['dropdown-menu']);
-    populateDropdown(dropdownMenu);
+    const projDropdown = _createElement('div', ['dropdown']);
+    const projDropdownMenu = _createElement('div', ['dropdown-menu', 'menu-proj']);
+    populateProjSelDropdown(projDropdownMenu);
 
     const projID = dispID.startsWith('proj') ? dispID : 'projInbox';
-    const projCont = createProjSelectButton(projID);
+    let projCont = createProjSelectButton(projID);
+
+    const priDropdown = _createElement('div', ['dropdown']);
+    const priDropdownMenu = _createElement('div', ['dropdown-menu', 'menu-pri']);
+    populatePriSelDropdown(priDropdownMenu);
+    let priCont = createPrioritySelectButton('p4');
     
     const saveButtonCont = _createElement('div', ['flexRow']);
     const saveButton = _createElement('button', ['saveButton'], 'Save Task');
     saveButton.type = 'submit';
     const cancelButton = _createElement('button', ['cancelButton'], 'Cancel', taskID + 'CANCEL');
-
-    scheduleCont.append(calIcon, dateInput);
-    dropdown.append(projCont, dropdownMenu);
-    taskButtonCont.append(scheduleCont, dropdown);
-    taskInputCont.append(titleInput, descInput, taskButtonCont);
-    saveButtonCont.append(saveButton, cancelButton);
-    taskForm.append(taskInputCont, saveButtonCont)
-
+    
     if (Storage.taskID_exists(taskID)) {
         const currTask = Storage.getTask(taskID);
         titleInput.value = currTask.getTitle();
         descInput.value = currTask.getDescription();
         dateInput.value = currTask.getDate();
+        priCont = createPrioritySelectButton(currTask.getPriority());
     }
+
+    scheduleCont.append(calIcon, dateInput);
+    projDropdown.append(projCont, projDropdownMenu);
+    priDropdown.append(priCont, priDropdownMenu);
+    taskButtonCont.append(scheduleCont, projDropdown, priDropdown);
+    taskInputCont.append(titleInput, descInput, taskButtonCont);
+    saveButtonCont.append(saveButton, cancelButton);
+    taskForm.append(taskInputCont, saveButtonCont)
 
     return taskForm;
 }
-const populateDropdown = (dropdown) => {
+const populateProjSelDropdown = (dropdown) => {
     const projList = Storage.getProjects();
 
     projList.forEach(proj => {
@@ -241,7 +249,43 @@ const createProjSelectButton = (projID) => {
     
     return projCont;
 }
+const populatePriSelDropdown = (dropdown) => {
+    const priArray = ['p1', 'p2', 'p3', 'p4'];
+
+    priArray.forEach(pri => {
+        const priItem = _createElement('div', ['flexRow', 'dropdown-item'], '', pri);
+        const priText = _createElement('p', ['dropdown-item-text']);
+        let icon = _createElement('i', ['fas', 'fa-flag']);
+        [priText.textContent, icon.style.color] = getPriorityInfo(pri);
+        
+        priItem.append(icon, priText);
+        dropdown.append(priItem);
+    })
+}
+const createPrioritySelectButton = (priority) => {
+    
+    const priCont = _createElement('button', ['flexRow', 'priSelCont', 'taskButton'], '', priority + 'SELECT');
+    const icon = _createElement('i', ['fas', 'fa-flag']);
+    // set color of icon based on priority
+    icon.style.color = getPriorityInfo(priority)[1];
+    priCont.append(icon);
+
+    return priCont;
+
+}
+const getPriorityInfo = (priority) => {
+    
+    switch (priority) {
+        case 'p1':
+            return ['Priority 1', 'red'];
+        case 'p2':
+            return ['Priority 2', 'orange'];
+        case 'p3':
+            return ['Priority 3', 'blue'];
+        case 'p4':
+            return ['Priority 4', 'gray'];
+    }
+}
 
 
-
-export { createDOM, createProject, createAddProj, createProjForm, createAddTask, createTask, createHR, createAddTaskForm, createProjSelectButton };
+export { createDOM, createProject, createAddProj, createProjForm, createAddTask, createTask, createHR, createAddTaskForm, createProjSelectButton, createPrioritySelectButton };
