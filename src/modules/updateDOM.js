@@ -7,7 +7,7 @@ import { Storage } from './storage'
 import { getTasks, sortTasks } from './appLogic'
 
 let currDispID = 'projInbox';
-let currSortOrder = 'byPriority';
+let currSortOrder = 'byDefault';
 
 const updateProjectList = () => {
 
@@ -34,6 +34,7 @@ const updateTaskList = (dispID) => {
     removeTaskItems();
     addTaskItems(sortedTasks);
     updateHeader(headerName);
+    updateSortBy();
     setupTaskEventListeners(currDispID);
 }
 const removeTaskItems = () => {
@@ -53,6 +54,9 @@ const addTaskItems = (activeTasks) => {
 const updateHeader = (headerName) => {
     const mainHeader = document.querySelector('#mainHeader');
     mainHeader.textContent = headerName;
+}
+const updateSortBy = () => {
+    document.querySelector('#sortByButton').textContent = 'Sort by: ' + currSortOrder.slice(2);
 }
 const closeAllForms = () => {
     closeProjForms();
@@ -98,5 +102,7 @@ const updatePriDropdown = (priority) => {
     const priCont = createPrioritySelectButton(priority);
     document.querySelector('.priSelCont').replaceWith(priCont);
 }
-
-export { updateProjectList, updateTaskList, closeAllForms, closeProjForms, closeTaskForms, removeTaskForm, updateProjDropdown, updatePriDropdown };
+const updateSortDropdown = (sortOrder) => {
+    currSortOrder = sortOrder;
+}
+export { updateProjectList, updateTaskList, closeAllForms, closeProjForms, closeTaskForms, removeTaskForm, updateProjDropdown, updatePriDropdown, updateSortDropdown };

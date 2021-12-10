@@ -35,10 +35,10 @@ const render = (() => {
     Storage.addProject(Project('proj3', 'Mopping'));
 
     // sample inbox tasks
-    const task1 = Task('task1', 'Garbage', 'Take garbage out to street','2021-10-31', 'p3', 'projInbox');
+    const task1 = Task('task1', 'Garbage', 'Take garbage out to street','2021-12-31', 'p3', 'projInbox');
     const task2 = Task('task2', 'Bathroom Floors', 'Clean bathroom floors','2021-12-09', 'p1', 'projInbox');
-    const task3 = Task('task3', 'Kitchen Floors', 'Clean kitchen floors','2021-10-31', 'p2', 'projInbox');
-    const task4 = Task('task4', 'Vacation', 'Buy ticket to Mexico','2021-10-31', 'p3', 'projInbox');
+    const task3 = Task('task3', 'Kitchen Floors', 'Clean kitchen floors','2021-12-31', 'p2', 'projInbox');
+    const task4 = Task('task4', 'Vacation', 'Buy ticket to Mexico','2021-12-31', 'p3', 'projInbox');
     
     Storage.getProject(inbox.getID()).addTask(task1);
     Storage.getProject(inbox.getID()).addTask(task2);

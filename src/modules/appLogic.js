@@ -106,9 +106,18 @@ const getTasks = (projID) => {
     }
 }
 const sortTasks = (tasks, sortOrder) => {
-    if (sortOrder === 'default') return tasks;
-    if (sortOrder === 'byDate') return tasks.sort(compareTaskByDate);
-    if (sortOrder === 'byPriority') return tasks.sort(compareTasksByPriority);
+    let shallowCopy = tasks.slice(); // ensures default ordering is untouched
+    if (sortOrder === 'byDefault') return shallowCopy;
+    if (sortOrder === 'byDate') return shallowCopy.sort((a, b) => {
+        if (compareTaskByDate(a, b) !== 0) return compareTaskByDate(a, b);
+        if (compareTaskByPriority(a, b) !== 0) return compareTaskByPriority(a, b);
+        return 0;
+    });
+    if (sortOrder === 'byPriority') return shallowCopy.sort((a, b) => {
+        if (compareTaskByPriority(a, b) !== 0) return compareTaskByPriority(a, b);
+        if (compareTaskByDate(a, b) !== 0) return compareTaskByDate(a, b);
+        return 0;
+    });
 }
 const compareTaskByDate = (a, b) => {
     const dateA = a.getDate();
@@ -118,13 +127,13 @@ const compareTaskByDate = (a, b) => {
     if (isBefore(parseISO(dateB), parseISO(dateA))) return 1;
     return 0;
 }
-const compareTasksByPriority = (a, b) => {
+const compareTaskByPriority = (a, b) => {
     const priA = a.getPriority()[1];
     const priB = b.getPriority()[1];
 
     if (priA - priB < 0) return -1;
     if (priA - priB > 0) return 1;
-    return compareTaskByDate(a, b);
+    return 0;
 }
 const addTask = (dispID) => {
     

@@ -18,10 +18,11 @@ Layout and design inspired by Todoist (todoist.com)
 - [x] Completed task function
 - [x] Format dates in DOM
 - [x] Today / This week
-- [x] View / modify project of a single task 
+- [x] View / modify project of a single task
 - [x] Add dropdown for task priority selection
 - [x] Set task circle color based on priority
-- [ ] Sort tasks based on priority / due date
+- [x] Sort tasks based on priority / due date
+- [x] Add dropdown for sorting
 - [ ] Setup local storage
 - [ ] keyboard listener for adding task (enter, escape key)
 - [ ] Add CSS / styling (beautify)

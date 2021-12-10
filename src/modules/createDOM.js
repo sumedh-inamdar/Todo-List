@@ -98,11 +98,24 @@ const _createMain = () => {
     const headerContainer = _createElement('div', ['flexRow', 'taskHeader'], '', '');
     const header = _createElement('h2', '', 'Inbox', 'mainHeader');
 
-    const taskList = _createElement('ul', ['taskList'], '', 'taskList');
+    const sortDropdown = _createElement('div', ['dropdown', 'dropdown-sort']);
+    const sortDropdownMenu = _createElement('div', ['dropdown-menu', 'menu-sort']);
+    
+    const sortCont = _createElement('button', ['flexRow', 'sortSelCont']);
+    const caretDown = _createElement('i', ['fas', 'fa-caret-down']);
+    const sortText = _createElement('div', '', '', 'sortByButton');
 
+    const byDefault = _createElement('div', ['dropdown-item'], 'Default', 'byDefault');
+    const byDate = _createElement('div', ['dropdown-item'], 'Date', 'byDate');
+    const byPriority = _createElement('div', ['dropdown-item'], 'Priority', 'byPriority');
+
+    const taskList = _createElement('ul', ['taskList'], '', 'taskList');
     taskList.append(createAddTask());
 
-    headerContainer.append(header);
+    sortCont.append(caretDown, sortText);
+    sortDropdownMenu.append(byDefault, byDate, byPriority);
+    sortDropdown.append(sortCont, sortDropdownMenu);
+    headerContainer.append(header, sortDropdown);
     mainContent.append(headerContainer, taskList);
 
 }

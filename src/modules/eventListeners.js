@@ -2,7 +2,7 @@
 // - Query elements and setup event listeners
 // - Calls appLogic functions 
 import { displayProject, editProject, submitProject, deleteProject, addProject, addTask, submitTask, editTask, deleteTask, checkTask, toggleCheck, displayToday, displayThisWeek } from './appLogic'
-import { closeProjForms, closeTaskForms, updateProjDropdown, updatePriDropdown } from './updateDOM'
+import { closeProjForms, closeTaskForms, updateProjDropdown, updatePriDropdown, updateSortDropdown, updateTaskList } from './updateDOM'
 
 // const setupAllEventListeners = () => {
 //     setupProjEventListeners();
@@ -51,17 +51,17 @@ const setupTaskEventListeners = (dispID) => {
     editNodes.forEach(editNode => editNode.addEventListener('click', editTask));
     delNodes.forEach(delNode => delNode.addEventListener('click', deleteTask));
     addTaskDIV.addEventListener('click', () => addTask(dispID));
-
-    document.removeEventListener('click', setupDropdownListener);
+    document.addEventListener('click', setupDropdownListener);
+    // document.removeEventListener('click', setupDropdownListener);
 }
 const setupTaskFormListener = (taskForm, dispID) => {
     const taskID = taskForm.id.slice(0, -4);
     const cancelButton = document.querySelector(`#${taskID}CANCEL`);
-    const projDropdown = document.querySelector('.projSelCont');
+    // const projDropdown = document.querySelector('.projSelCont');
 
     cancelButton.addEventListener('click', () => closeTaskForms());
     taskForm.addEventListener('submit', (e) => submitTask(e, dispID));
-    document.addEventListener('click', setupDropdownListener);
+    
 }
 
 const setupDropdownListener = (event) => {
@@ -69,6 +69,8 @@ const setupDropdownListener = (event) => {
     const isDropDownButton = event.target.closest('.dropdown');
     const isDropDownItem = event.target.closest('.dropdown-item');
     const isTaskForm = event.target.closest('.taskForm');
+    const isProjForm = event.target.closest('.projForm');
+
     // if (!isDropDownButton && event.target.closest('.dropdown') != null) return; // do nothing if click is inside dropdown menu
 
     if (isDropDownItem) {
@@ -79,6 +81,10 @@ const setupDropdownListener = (event) => {
         } else if(isDropDownItem.closest('.menu-pri')) {
             const selectedPriority = isDropDownItem.id;
             updatePriDropdown(selectedPriority);
+        } else if(isDropDownItem.closest('.menu-sort')) {
+            const selectedSort = isDropDownItem.id;
+            updateSortDropdown(selectedSort);
+            updateTaskList();
         }
     }
     
@@ -93,7 +99,7 @@ const setupDropdownListener = (event) => {
         dropDown.classList.remove('active');
     })
 
-    if (isTaskForm && !isDropDownButton) return; // allows other form click events to occur
+    if ((isTaskForm && !isDropDownButton) || isProjForm) return; // allows other form click events to occur
     event.preventDefault();
 
 }
