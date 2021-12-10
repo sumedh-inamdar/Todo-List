@@ -163,10 +163,24 @@ hr {
     transform: translateY(-10px);
     transition: opacity 150ms ease-in-out, transform 150ms ease-in-out;
 }
-.dropdown.active > .taskButton + .dropdown-menu {
+.dropdown.active > * + .dropdown-menu {
     opacity: 1;
     transform: translateY(0);
     pointer-events: auto;
+}
+.dropdown-sort {
+    align-self: flex-end;
+}
+.sortSelCont {
+    align-items: center;
+    padding: 2.5px 2.5px;
+    border: 1px solid black;
+    border-radius: 5px;
+    margin: 5px;
+    background-color: white;
+}
+.sortSelCont > * {
+    margin: 3px;
 }
 .dropdown-item
 {
