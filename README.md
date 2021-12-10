@@ -22,14 +22,16 @@ Layout and design inspired by Todoist (todoist.com)
 - [x] Add dropdown for task priority selection
 - [x] Set task circle color based on priority
 - [ ] Sort tasks based on priority / due date
+- [ ] Setup local storage
 - [ ] keyboard listener for adding task (enter, escape key)
 - [ ] Add CSS / styling (beautify)
 - [ ] Add hover effect to project li element (shows edit and delete button)
+- [ ] Add footer
 
 ## Future features
 
 - [ ] Option to hide completed tasks
-- [ ] SVG to replace circle markers (to enable custom fill colors, etc)
+- [ ] Drag and drop tasks
 
 ## Bugs to fix
 

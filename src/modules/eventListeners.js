@@ -77,7 +77,6 @@ const setupDropdownListener = (event) => {
             const selectedProjID = isDropDownItem.id.slice(0, -8);
             updateProjDropdown(selectedProjID);    
         } else if(isDropDownItem.closest('.menu-pri')) {
-            // const selectedTaskID = isDropDownItem.closest('.taskForm').id.slice(0, -4);
             const selectedPriority = isDropDownItem.id;
             updatePriDropdown(selectedPriority);
         }

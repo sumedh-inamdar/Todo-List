@@ -4,6 +4,7 @@ import { setupProjEventListeners, setupProjFormListener, setupTaskFormListener, 
 import { Storage } from './storage'
 import { Project } from './project'
 import { Schedule, Task } from './task'
+import { isBefore, parseISO } from 'date-fns'
 
 let currActiveProjID = 'projInbox';
 
@@ -104,6 +105,27 @@ const getTasks = (projID) => {
         return tasksThisWeek;
     }
 }
+const sortTasks = (tasks, sortOrder) => {
+    if (sortOrder === 'default') return tasks;
+    if (sortOrder === 'byDate') return tasks.sort(compareTaskByDate);
+    if (sortOrder === 'byPriority') return tasks.sort(compareTasksByPriority);
+}
+const compareTaskByDate = (a, b) => {
+    const dateA = a.getDate();
+    const dateB = b.getDate();
+    
+    if (isBefore(parseISO(dateA), parseISO(dateB))) return -1;
+    if (isBefore(parseISO(dateB), parseISO(dateA))) return 1;
+    return 0;
+}
+const compareTasksByPriority = (a, b) => {
+    const priA = a.getPriority()[1];
+    const priB = b.getPriority()[1];
+
+    if (priA - priB < 0) return -1;
+    if (priA - priB > 0) return 1;
+    return compareTaskByDate(a, b);
+}
 const addTask = (dispID) => {
     
     closeAllForms();
@@ -202,4 +224,4 @@ const checkTask = (event) => {
 }
 
 
-export { loadApp, displayProject, editProject, submitProject, deleteProject, addProject, getTasks, addTask, submitTask, editTask, deleteTask, toggleCheck, checkTask, displayToday, displayThisWeek }
+export { loadApp, displayProject, editProject, submitProject, deleteProject, addProject, getTasks, sortTasks, addTask, submitTask, editTask, deleteTask, toggleCheck, checkTask, displayToday, displayThisWeek }

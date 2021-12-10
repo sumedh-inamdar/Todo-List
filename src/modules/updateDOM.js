@@ -4,9 +4,10 @@
 import { createProject, createAddProj, createTask, createHR, createAddTask, createProjSelectButton, createPrioritySelectButton } from './createDOM'
 import { setupProjEventListeners, setupTaskEventListeners } from './eventListeners';
 import { Storage } from './storage'
-import { getTasks } from './appLogic'
+import { getTasks, sortTasks } from './appLogic'
 
 let currDispID = 'projInbox';
+let currSortOrder = 'byPriority';
 
 const updateProjectList = () => {
 
@@ -26,10 +27,12 @@ const updateTaskList = (dispID) => {
     if(dispID) currDispID = dispID;
 
     const headerName = currDispID.startsWith('proj') ? Storage.getProject(currDispID).getName() : currDispID;
-
+    const currTasks = getTasks(currDispID);
+    const sortedTasks = sortTasks(currTasks, currSortOrder);
+    
     closeTaskForms();
     removeTaskItems();
-    addTaskItems(getTasks(currDispID));
+    addTaskItems(sortedTasks);
     updateHeader(headerName);
     setupTaskEventListeners(currDispID);
 }
