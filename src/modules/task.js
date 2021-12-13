@@ -4,6 +4,7 @@ Module responsible for creating a task object and supporting functions
 
 */
 import { formatISO, parseISO, differenceInCalendarDays, format, isThisYear, isToday, isThisWeek, isPast } from 'date-fns'
+import { Storage } from './storage'
 
 const Task = (id, title, description, date, priority, projID) => {
 

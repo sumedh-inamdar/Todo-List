@@ -9,10 +9,13 @@ import { isBefore, parseISO } from 'date-fns'
 let currActiveProjID = 'projInbox';
 
 const loadApp = () => {
+    if (Storage.checkLocalStorage()) Storage.loadLocalStorage();
+    else Storage.createLocalStorage();
     createDOM();
     setupNavEventListeners(); // nav corresponds to ('inbox, 'today', 'this week')
     updateProjectList();
     updateTaskList('projInbox');
+
 }
 const displayProject = (event) => {
 
@@ -62,6 +65,7 @@ const submitProject = (event) => {
         ulElement.appendChild(createAddProj());
     }
     updateProjectList();
+    Storage.saveToLocalStorage();
 }
 const deleteProject = (event) => {
     
@@ -72,6 +76,7 @@ const deleteProject = (event) => {
 
     updateProjectList();
     updateTaskList('projInbox');
+    Storage.saveToLocalStorage();
 
 }
 const addProject = (event) => {
@@ -84,7 +89,6 @@ const addProject = (event) => {
 
     addProjLI.replaceWith(projForm);
     setupProjFormListener(projForm);
-    
 
 }
 const getTasks = (projID) => {
@@ -179,6 +183,7 @@ const submitTask = (event, dispID) => {
         removeTaskForm(event.target);
     }
     updateTaskList();
+    Storage.saveToLocalStorage();
 
 }
 const editTask = (event) => {
@@ -210,6 +215,7 @@ const deleteTask = (event) => {
     Storage.removeTaskID(taskID);
     
     updateTaskList();
+    Storage.saveToLocalStorage();
 }
 const toggleCheck = (event) => {
 
@@ -230,6 +236,7 @@ const checkTask = (event) => {
 
     task.check();
     updateTaskList();
+    Storage.saveToLocalStorage();
 }
 
 

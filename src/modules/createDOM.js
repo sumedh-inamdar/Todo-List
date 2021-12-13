@@ -17,6 +17,7 @@ const createDOM = () => {
     _createHeader();
     _createSideBar();
     _createMain();
+    
 }
 const _createHeader = () => {
     

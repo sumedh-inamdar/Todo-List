@@ -25,7 +25,7 @@ const updateProjectList = () => {
 const updateTaskList = (dispID) => {
 
     if(dispID) currDispID = dispID;
-
+    
     const headerName = currDispID.startsWith('proj') ? Storage.getProject(currDispID).getName() : currDispID;
     const currTasks = getTasks(currDispID);
     const sortedTasks = sortTasks(currTasks, currSortOrder);
