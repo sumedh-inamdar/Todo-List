@@ -15,21 +15,47 @@ body,
     display: flex;
     flex-direction: column;
 }
+header,
 .flexRow {
     display: flex;
     flex-direction: row;
 }
 header {
-    flex: 0 0 100px;
-    background-color: teal;
+    flex: 0 0 50px;
+    background-color: #e07a5f;
+    font-size: 32px;
+    
+}
+header > div {
+    flex-basis: 25%;
+    align-items: center;
+    /* justify-content: flex-end; */
+}
+header > div > #nav-menu-icon {
+    font-size: 24px;
+    margin: 15px;
+}
+header > div > #nav-menu-icon:hover {
+    cursor: pointer;
+    color: #f2cc8f;
+}
+header > div > .fa-thumbtack {
+    margin-left: auto;
+}
+header > div > * {
+    margin: 5px;
+}
+header > div > span {
+    height: 32px;
 }
 #sideBar {
     flex: 0 0 300px;
-    background-color: wheat;
+    background-color: #f2cc8f;
 }
 #mainContent {
     flex: 1 0 auto;
     align-items: center;
+    background-color: #f4f1de;
 }
 
 #sideBarNavCont {
