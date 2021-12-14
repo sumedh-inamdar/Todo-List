@@ -47,25 +47,18 @@ const editProject = (event) => {
 }
 const submitProject = (event) => {
     
-    event.preventDefault();
+    
     const projID = event.target.id.slice(0,-4);
     const newProjName = document.querySelector('#projInput').value;
     const ulElement = document.querySelector('#projList');
 
-    if (Storage.checkProjectName(newProjName)) {
-        alert('Project name exists');
-        return;
-    } else if (Storage.getProject(projID)) {
-        Storage.updateProjectName(projID, newProjName);  
-    } else {
-        Storage.addProject(Project(projID, newProjName));
-        
-        // move below two lines of code to updateDOM
-        event.target.parentNode.remove();
-        ulElement.appendChild(createAddProj());
-    }
+    if (Storage.isProjNameTaken(newProjName) ) alert('Project name exists');
+    else if (Storage.getProject(projID)) Storage.updateProjectName(projID, newProjName);  
+    else Storage.addProject(Project(projID, newProjName));
+
     updateProjectList();
     Storage.saveToLocalStorage();
+    event.preventDefault();
 }
 const deleteProject = (event) => {
     

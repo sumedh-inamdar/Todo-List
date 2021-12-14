@@ -12,13 +12,13 @@ let currSortOrder = 'byDefault';
 const updateProjectList = () => {
 
     document.querySelectorAll('.projItem').forEach(item => item.remove());
-
-    const refNode = document.querySelector('#addProj');
-    const parentNode = refNode.parentNode;
+    document.querySelector('#addProj').remove();
+    const projList = document.querySelector('#projList');
 
     Storage.getProjects().forEach(proj => {
-        if(proj.getID() !== 'projInbox') parentNode.insertBefore(createProject(proj), refNode);
+        if(proj.getID() !== 'projInbox') projList.appendChild(createProject(proj));
     });
+    projList.appendChild(createAddProj());
 
     setupProjEventListeners();
 }

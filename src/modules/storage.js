@@ -112,7 +112,7 @@ const Storage = {
     getProject: (projID) => {
         return activeProjects[getIndexByID(projID)];
     },
-    checkProjectName: (projName) => {
+    isProjNameTaken: (projName) => {
         return activeProjects.some(project => project.getName() === projName);
     },
     updateProject(projID, newProj) {

@@ -33,10 +33,15 @@ const setupProjEventListeners = () => {
 const setupProjFormListener = (projForm) => {
     const projID = projForm.id.slice(0, -4);
     const cancelIcon = document.querySelector(`#${projID}CANCEL`);
+    const projInput = document.querySelector('#projInput');
 
+    projInput.focus();
     cancelIcon.addEventListener('click', () => closeProjForms());
-
     projForm.addEventListener('submit', submitProject);
+    projForm.addEventListener('keyup', (event) => {
+        if (event.code === 'Escape') return closeProjForms()
+    })
+
 
 }
 const setupTaskEventListeners = (dispID) => {
@@ -52,19 +57,24 @@ const setupTaskEventListeners = (dispID) => {
     delNodes.forEach(delNode => delNode.addEventListener('click', deleteTask));
     addTaskDIV.addEventListener('click', () => addTask(dispID));
     document.addEventListener('click', setupDropdownListener);
-    // document.removeEventListener('click', setupDropdownListener);
 }
 const setupTaskFormListener = (taskForm, dispID) => {
     const taskID = taskForm.id.slice(0, -4);
     const cancelButton = document.querySelector(`#${taskID}CANCEL`);
-    // const projDropdown = document.querySelector('.projSelCont');
+    const taskTitle = document.querySelector('#taskTitle');
+    const saveButton = document.querySelector('.saveButton');
 
+    taskTitle.focus();
     cancelButton.addEventListener('click', () => closeTaskForms());
     taskForm.addEventListener('submit', (e) => submitTask(e, dispID));
+    document.addEventListener('keyup', (event) => {
+        if (event.code === 'Escape') return closeTaskForms();
+    })
     
 }
 
 const setupDropdownListener = (event) => {
+    
     // figure out how to enable other listeners in form
     const isDropDownButton = event.target.closest('.dropdown');
     const isDropDownItem = event.target.closest('.dropdown-item');

@@ -17,12 +17,16 @@ const createDOM = () => {
     _createHeader();
     _createSideBar();
     _createMain();
-    
+
 }
 const _createHeader = () => {
     
-    const headerDiv = _createElement('div', ['headerDiv'], 'To-Do Application');
+    const headerDiv = _createElement('div', ['flexRow']);
+    const navBarIcon = _createElement('i', ['fas', 'fa-bars'], '', 'nav-menu-icon');
+    const tasksIcon = _createElement('i', ['fas', 'fa-thumbtack']);
+    const headerText = _createElement('span', '', 'Tackle List');
 
+    headerDiv.append(navBarIcon, tasksIcon, headerText);
     document.querySelector('header').append(headerDiv);
 }
 const _createSideBar = () => {
@@ -257,6 +261,7 @@ const populateProjSelDropdown = (dropdown) => {
 const createProjSelectButton = (projID) => {
     
     const projCont = _createElement('button', ['flexRow', 'projSelCont', 'taskButton'], '', projID + 'SELECT');
+    projCont.type = 'button';
     const inboxIcon = _createElement('i', ['fas', 'fa-inbox']);
     const projIcon = _createElement('i', ['far', 'fa-dot-circle']);
     const icon = projID === 'projInbox' ? inboxIcon : projIcon;
@@ -282,6 +287,7 @@ const populatePriSelDropdown = (dropdown) => {
 const createPrioritySelectButton = (priority) => {
     
     const priCont = _createElement('button', ['flexRow', 'priSelCont', 'taskButton'], '', priority + 'SELECT');
+    priCont.type = 'button';
     const icon = _createElement('i', ['fas', 'fa-flag']);
     // set color of icon based on priority
     icon.style.color = getPriorityInfo(priority)[1];
