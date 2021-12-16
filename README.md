@@ -25,9 +25,9 @@ Layout and design inspired by Todoist (todoist.com)
 - [x] Add dropdown for sorting
 - [x] Setup local storage
 - [x] keyboard listener for adding task / project (enter, escape key)
-- [ ] Add CSS / styling (beautify)
-- [ ] Show / hide nav bar
-- [ ] Add hover effect to project li element (shows edit and delete button)
+- [x] Add CSS / styling (beautify)
+- [x] Show / hide nav bar
+- [x] Add hover effect to project li element (shows edit and delete button)
 - [ ] Add footer
 
 ## Future features
@@ -36,5 +36,5 @@ Layout and design inspired by Todoist (todoist.com)
 - [ ] Drag and drop tasks
 
 ## Bugs to fix
-
-- [x] Remove Inbox from project list
+- [ ] expand/collapse transitions
+- [ ] shifting of buttons during hover (e.g. sort by, cancel task)

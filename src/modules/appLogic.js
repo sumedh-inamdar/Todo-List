@@ -17,11 +17,20 @@ const loadApp = () => {
     updateTaskList('projInbox');
 
 }
+const expandSidebar = () => {
+    const sidebar = document.querySelector('#sideBar');
+    sidebar.classList.toggle('collapsed');
+}
 const displayProject = (event) => {
-
+    if (event.target.matches('i')) return;
     closeAllForms();
-    const projID = event.target.id.slice(0, -2);
+    const projItem = event.target.closest('.projItem');
+    const projID = projItem.querySelector('li').id.slice(0, -2);
     updateTaskList(projID);
+}
+const displayInbox = (event) => {
+    closeAllForms();
+    updateTaskList('projInbox');
 }
 const displayToday = (event) => {
     
@@ -38,19 +47,22 @@ const editProject = (event) => {
     closeAllForms();
 
     const currProjID = event.target.id.slice(0,-4);
-    const liNode = document.querySelector(`#${currProjID}LI`);
     const projForm = createProjForm(currProjID);
-    liNode.replaceWith(projForm);
+    const projItem = event.target.closest('.projItem');
+
+    projItem.replaceWith(projForm);
+    // remove display of edit and del buttons
+    // document.querySelector(`#${currProjID}EDIT`).remove();
+    // document.querySelector(`#${currProjID}DEL`).remove();
 
     setupProjFormListener(projForm);
 
 }
 const submitProject = (event) => {
-    
-    
+
     const projID = event.target.id.slice(0,-4);
     const newProjName = document.querySelector('#projInput').value;
-    const ulElement = document.querySelector('#projList');
+    // const ulElement = document.querySelector('#projList');
 
     if (Storage.isProjNameTaken(newProjName) ) alert('Project name exists');
     else if (Storage.getProject(projID)) Storage.updateProjectName(projID, newProjName);  
@@ -76,13 +88,33 @@ const addProject = (event) => {
     
     closeAllForms();
 
-    const addProjLI = event.target;
+    // const addProjLI = event.target;
     const projID = Storage.generateProjID();
     const projForm = createProjForm(projID);
 
-    addProjLI.replaceWith(projForm);
+    document.querySelector('#addProj').replaceWith(projForm);
     setupProjFormListener(projForm);
 
+}
+const toggleProjIcons = (event) => {
+    const projItem = event.target.closest('.projItem');
+    const projIcons = projItem.querySelectorAll('.fa-edit, .fa-trash-alt');
+    projIcons.forEach(projIcon => projIcon.classList.toggle('inactive'));
+}
+const expandProjHeader = (event) => {
+    const projList = document.querySelector('#projList');
+    const arrowIcon = document.querySelector('#proj-expand-icon');
+
+    projList.classList.toggle('projList-transitioned');
+    arrowIcon.classList.toggle('collapsed');
+}
+const toggleTaskHover = (event) => {
+    const taskItem = event.target.closest('.taskItem');
+    const taskIcons = taskItem.querySelectorAll('.fa-edit, .fa-trash-alt');
+
+    taskItem.classList.toggle('taskHover');
+    taskIcons.forEach(taskIcon => taskIcon.classList.toggle('inactive'));
+    
 }
 const getTasks = (projID) => {
 
@@ -183,7 +215,7 @@ const editTask = (event) => {
     
     closeAllForms();
 
-    const currTaskID = event.target.id.slice(0, -4);
+    const currTaskID = event.target.closest('.taskItem').id.slice(0, -4);
     const currTaskItem = document.querySelector(`#${currTaskID}ITEM`);
     const currProjID = Storage.getTask(currTaskID).getProjID();
     const taskForm = createAddTaskForm(currTaskID, currProjID);
@@ -233,4 +265,4 @@ const checkTask = (event) => {
 }
 
 
-export { loadApp, displayProject, editProject, submitProject, deleteProject, addProject, getTasks, sortTasks, addTask, submitTask, editTask, deleteTask, toggleCheck, checkTask, displayToday, displayThisWeek }
+export { loadApp, expandSidebar, displayProject, editProject, submitProject, deleteProject, addProject, toggleProjIcons, expandProjHeader, toggleTaskHover, getTasks, sortTasks, addTask, submitTask, editTask, deleteTask, toggleCheck, checkTask, displayInbox, displayToday, displayThisWeek }

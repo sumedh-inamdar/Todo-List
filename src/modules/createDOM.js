@@ -23,53 +23,79 @@ const _createHeader = () => {
     
     const headerDiv = _createElement('div', ['flexRow']);
     const navBarIcon = _createElement('i', ['fas', 'fa-bars'], '', 'nav-menu-icon');
+    const logoDiv = _createElement('div', ['flexRow'], '', 'logo-div');
     const tasksIcon = _createElement('i', ['fas', 'fa-thumbtack']);
-    const headerText = _createElement('span', '', 'Tackle List');
+    const headerText = _createElement('span', '', 'Tacklist');
 
-    headerDiv.append(navBarIcon, tasksIcon, headerText);
+    logoDiv.append(tasksIcon, headerText);
+    headerDiv.append(navBarIcon, logoDiv);
     document.querySelector('header').append(headerDiv);
 }
-const _createSideBar = () => {
-        
-    const sideBar = document.querySelector('#sideBar');
-    
+const _createSideBar = () => document.querySelector('#sideBar').append(_createSideBar_Nav(), _createSideBar_Proj());
+
+const _createSideBar_Nav = () => {
     const navCont = _createElement('div', ['flexCol'],'','sideBarNavCont');
-    const inbox = _createElement('div', ['sideBarLink'], 'Inbox', 'projInboxLI');
-    const today = _createElement('div', ['sideBarLink'], 'Today', 'today');
-    const thisWeek = _createElement('div', ['sideBarLink'], 'This Week', 'thisWeek');
 
-    const projCont = _createElement('div', ['flexCol'], '', 'projCont');
-    const projHeadingCont = _createElement('div');
-    const projHeadingText = _createElement('h4', ['flexCol'], 'Projects');
-    const projList = _createElement('ul', ['projList'], '', 'projList');
+    const inbox = _createElement('div', ['sideBarLink', 'flexRow'], '', 'projInboxLI');
+    const inboxIcon = _createElement('i', ['fas', 'fa-inbox']);
+    const inboxText = _createElement('span', '', 'Inbox');
+    const inboxQty = _createElement('span', '', '0', 'inbox-qty-span');
 
-    projHeadingCont.append(projHeadingText);
-    projList.append(createAddProj());
+    const today = _createElement('div', ['sideBarLink', 'flexRow'], '' , 'today');
+    const todayIcon = _createElement('i', ['fas', 'fa-calendar-day']);
+    const todayText = _createElement('span', '', 'Today');
+    const todayQty = _createElement('span', '', '0', 'today-qty-span');
 
-    projCont.append(projHeadingCont, projList);
-    
+    const thisWeek = _createElement('div', ['sideBarLink', 'flexRow'], '', 'thisWeek');
+    const thisWeekIcon = _createElement('i', ['fas', 'fa-calendar-week']);
+    const thisWeekText = _createElement('span', '', 'This Week');
+    const thisWeekQty = _createElement('span', '', '0', 'thisWeek-qty-span');
+
+    inbox.append(inboxIcon, inboxText, inboxQty);
+    today.append(todayIcon, todayText, todayQty);
+    thisWeek.append(thisWeekIcon, thisWeekText, thisWeekQty);
+
     navCont.append(inbox, today, thisWeek);
 
-    sideBar.append(navCont, projCont);
+    return navCont;
+}
+const _createSideBar_Proj = () => {
+    const projCont = _createElement('div', ['flexCol'], '', 'projCont');
 
+    const projHeader = _createElement('div', ['flexRow'], '', 'proj-header-div');
+    const projExpandIcon = _createElement('i', ['fas', 'fa-caret-down'], '', 'proj-expand-icon');
+    const projHeaderText = _createElement('h4', ['flexCol'], 'Projects');
+    const projList = _createElement('ul', ['projList'], '', 'projList');
+
+    projHeader.append(projExpandIcon, projHeaderText);
+    projList.append(createAddProj());
+
+    projCont.append(projHeader, projList);
+
+    return projCont;
 }
 const createAddProj = () => {
     const addProjCont = _createElement('div', '', '', 'addProj');
-    const addProjLI = _createElement('li', ['noMarker'], '+ Add Project', 'addProjectLI');
-    addProjCont.append(addProjLI);
+    const addProjIcon = _createElement('i', ['fas', 'fa-plus']);
+    const addProjLI = _createElement('li', ['noMarker'], 'Add Project', 'addProjectLI');
+    addProjCont.append(addProjIcon, addProjLI);
     return addProjCont;
 }
 const createProject = (proj) => {
     
     const projName = proj.getName();
     const projID = proj.getID();
+    const numTasks = proj.getTasks().length || '0';
 
     const projectElement = _createElement('div', ['projItem']);
-    const liNode = _createElement('li', '', projName, projID + 'LI');
-    const editIcon = _createElement('i', ['far','fa-edit'], '', projID + 'EDIT');
-    const delIcon = _createElement('i', ['far','fa-trash-alt'], '', projID + 'DEL');
+    const liNode = _createElement('li', '', '', projID + 'LI'); // consider moving projID to projItem
+    const projText = _createElement('div', '', projName);
+    const editIcon = _createElement('i', ['far','fa-edit', 'inactive'], '', projID + 'EDIT');
+    const delIcon = _createElement('i', ['far','fa-trash-alt', 'inactive'], '', projID + 'DEL');
+    const projQty = _createElement('span', '', numTasks);
 
-    projectElement.append(liNode, editIcon, delIcon);
+    liNode.append(projText);
+    projectElement.append(liNode, editIcon, delIcon, projQty);
 
     return projectElement;
 }
@@ -83,16 +109,16 @@ const createProjForm = (projID) => {
     projInput.placeholder = 'Project Name';
     projInput.value = Storage.projID_exists(projID) ? Storage.getProject(projID).getName() : '';
 
-    const saveButton = _createElement('button', '', '',  projID + 'SAVE');
+    const saveButton = _createElement('button', ['saveButton'], '',  projID + 'SAVE');
     saveButton.type = 'submit';
-    const saveIcon = _createElement('i', ['far', 'fa-save'], '');
+    const saveIcon = _createElement('i', ['fas', 'fa-check'], '');
     
-    const cancelButton = _createElement('button', '', '', projID + 'CANCEL');
+    const cancelButton = _createElement('button', ['cancelButton'], '', projID + 'CANCEL');
     cancelButton.type = 'button';
-    const cancelIcon = _createElement('i', ['far', 'fa-window-close'], '');
+    const cancelIcon = _createElement('i', ['fas', 'fa-times'], '');
 
     saveButton.append(saveIcon);
-    cancelButton.appendChild(cancelIcon);
+    cancelButton.append(cancelIcon);
     projForm.append(projInput, saveButton, cancelButton);
 
     return projForm;
@@ -155,8 +181,8 @@ const createTask = (task) => {
     
         const liNode = _createElement('li', ['noMarker'], task.getTitle());
         if (task.isCompleted()) liNode.classList.add('strike');
-        const editNode = _createElement('i', ['far','fa-edit'], '', taskID + 'EDIT');
-        const delIcon = _createElement('i', ['far','fa-trash-alt'], '', taskID + 'DEL');
+        const editNode = _createElement('i', ['far','fa-edit', 'inactive'], '', taskID + 'EDIT');
+        const delIcon = _createElement('i', ['far','fa-trash-alt', 'inactive'], '', taskID + 'DEL');
         
         const calIcon = _createElement('i', ['far', 'fa-calendar-alt']);
         const taskDate = _createElement('div', ['taskDate'], task.getDateDOM());
@@ -165,7 +191,8 @@ const createTask = (task) => {
 
         liCont.append(liNode, editNode, delIcon);
         scheduleCont.append(calIcon, taskDate);
-        taskCont.append(liCont, descPrev, scheduleCont);
+        taskCont.append(liCont, descPrev);
+        if (taskDate.textContent) taskCont.append(scheduleCont);
 
         outerCont.append(checkCont, taskCont);
         
@@ -186,7 +213,7 @@ const createAddTaskForm = (taskID, dispID) => {
 
     const taskForm = _createElement('form', ['flexCol','taskForm'], '', taskID + 'FORM');
 
-    const taskInputCont = _createElement('div', ['flexCol']);
+    const taskInputCont = _createElement('div', ['flexCol', 'taskInputCont']);
     
     const titleInput = _createElement('input', '', '', 'taskTitle');
     titleInput.type = 'text';
@@ -206,22 +233,22 @@ const createAddTaskForm = (taskID, dispID) => {
     dateInput.min = Schedule().getDateToday();
     if (dispID === 'today') dateInput.value = Schedule().getDateToday();
     
-    const projDropdown = _createElement('div', ['dropdown']);
+    const projDropdown = _createElement('div', ['dropdown', 'dropdown-proj']);
     const projDropdownMenu = _createElement('div', ['dropdown-menu', 'menu-proj']);
     populateProjSelDropdown(projDropdownMenu);
 
     const projID = dispID.startsWith('proj') ? dispID : 'projInbox';
     let projCont = createProjSelectButton(projID);
 
-    const priDropdown = _createElement('div', ['dropdown']);
+    const priDropdown = _createElement('div', ['dropdown', 'dropdown-pri']);
     const priDropdownMenu = _createElement('div', ['dropdown-menu', 'menu-pri']);
     populatePriSelDropdown(priDropdownMenu);
     let priCont = createPrioritySelectButton('p4');
     
     const saveButtonCont = _createElement('div', ['flexRow']);
-    const saveButton = _createElement('button', ['saveButton'], 'Save Task');
+    const saveButton = _createElement('button', ['saveTask'], 'Save Task');
     saveButton.type = 'submit';
-    const cancelButton = _createElement('button', ['cancelButton'], 'Cancel', taskID + 'CANCEL');
+    const cancelButton = _createElement('button', ['cancelTask'], 'Cancel', taskID + 'CANCEL');
     
     if (Storage.taskID_exists(taskID)) {
         const currTask = Storage.getTask(taskID);
@@ -246,7 +273,7 @@ const populateProjSelDropdown = (dropdown) => {
 
     projList.forEach(proj => {
         const inboxIcon = _createElement('i', ['fas', 'fa-inbox']);
-        const projIcon = _createElement('i', ['far', 'fa-dot-circle']);
+        const projIcon = _createElement('i', ['fas', 'fa-circle']);
         let projName = proj.getName();
         let projID = proj.getID();
 

@@ -1,7 +1,7 @@
 // Module responsiblibilities:
 // - Query elements and setup event listeners
 // - Calls appLogic functions 
-import { displayProject, editProject, submitProject, deleteProject, addProject, addTask, submitTask, editTask, deleteTask, checkTask, toggleCheck, displayToday, displayThisWeek } from './appLogic'
+import { expandSidebar, displayProject, editProject, submitProject, deleteProject, addProject, toggleProjIcons, expandProjHeader, toggleTaskHover, addTask, submitTask, editTask, deleteTask, checkTask, toggleCheck, displayInbox, displayToday, displayThisWeek } from './appLogic'
 import { closeProjForms, closeTaskForms, updateProjDropdown, updatePriDropdown, updateSortDropdown, updateTaskList } from './updateDOM'
 
 // const setupAllEventListeners = () => {
@@ -9,26 +9,35 @@ import { closeProjForms, closeTaskForms, updateProjDropdown, updatePriDropdown, 
 //     setupTaskEventListeners();
 // }
 const setupNavEventListeners = () => {
+    const navMenuIcon = document.querySelector('#nav-menu-icon');
     const inboxNode = document.querySelector('#projInboxLI');
     const todayNode = document.querySelector('#today');
     const thisWeekNode = document.querySelector('#thisWeek');
 
-    inboxNode.addEventListener('click', displayProject);
+    navMenuIcon.addEventListener('click', expandSidebar);
+    inboxNode.addEventListener('click', displayInbox);
     todayNode.addEventListener('click', displayToday);
     thisWeekNode.addEventListener('click', displayThisWeek);
 }
 const setupProjEventListeners = () => {
 
     // later: setup event listeners for project LI elements
-    const projNodes = document.querySelectorAll('.projItem li');
-    const editNodes = document.querySelectorAll('.projItem .fa-edit');
-    const delNodes = document.querySelectorAll('.projItem .fa-trash-alt');
-    const addProjLI = document.querySelector('#addProjectLI');
-
-    projNodes.forEach(projNode => projNode.addEventListener('click', displayProject))
+    const projHeader = document.querySelector('#proj-header-div');
+    const projItems = document.querySelectorAll('.projItem');
+    const projNodes = document.querySelectorAll('.projItem > li');
+    const editNodes = document.querySelectorAll('.projItem > .fa-edit');
+    const delNodes = document.querySelectorAll('.projItem > .fa-trash-alt');
+    // const addProjLI = document.querySelector('#addProjectLI');
+    const addProjNode = document.querySelector('#addProj');
+    
+    projHeader.addEventListener('click', expandProjHeader);
+    projItems.forEach(projItem => projItem.addEventListener('mouseenter', toggleProjIcons));
+    projItems.forEach(projItem => projItem.addEventListener('mouseleave', toggleProjIcons));
+    projItems.forEach(projNode => projNode.addEventListener('click', displayProject))
     editNodes.forEach(editNode => editNode.addEventListener('click', editProject));
     delNodes.forEach(delNode => delNode.addEventListener('click', deleteProject));
-    addProjLI.addEventListener('click', addProject);
+    // addProjLI.addEventListener('click', addProject);
+    addProjNode.addEventListener('click', addProject);
 }
 const setupProjFormListener = (projForm) => {
     const projID = projForm.id.slice(0, -4);
@@ -49,7 +58,11 @@ const setupTaskEventListeners = (dispID) => {
     const editNodes = document.querySelectorAll('.taskItem .fa-edit');
     const delNodes = document.querySelectorAll('.taskItem .fa-trash-alt');
     const addTaskDIV = document.querySelector('#addTask');
+    const taskCont = document.querySelectorAll('.taskCont');
 
+    taskCont.forEach(taskNode => taskNode.addEventListener('mouseenter', toggleTaskHover));
+    taskCont.forEach(taskNode => taskNode.addEventListener('mouseleave', toggleTaskHover));
+    taskCont.forEach(taskNode => taskNode.addEventListener('click', editTask));
     checkNodes.forEach(checkNode => checkNode.addEventListener('mouseenter', toggleCheck));
     checkNodes.forEach(checkNode => checkNode.addEventListener('mouseleave', toggleCheck));
     checkNodes.forEach(checkNode => checkNode.addEventListener('click', checkTask));

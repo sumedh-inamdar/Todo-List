@@ -10,11 +10,13 @@ let currDispID = 'projInbox';
 let currSortOrder = 'byDefault';
 
 const updateProjectList = () => {
-
-    document.querySelectorAll('.projItem').forEach(item => item.remove());
-    document.querySelector('#addProj').remove();
+    
+    // document.querySelectorAll('.projItem').forEach(item => item.remove());
+    // document.querySelector('#addProj').remove();
     const projList = document.querySelector('#projList');
 
+    while (projList.firstChild) projList.removeChild(projList.firstChild);
+    
     Storage.getProjects().forEach(proj => {
         if(proj.getID() !== 'projInbox') projList.appendChild(createProject(proj));
     });
@@ -33,6 +35,7 @@ const updateTaskList = (dispID) => {
     closeTaskForms();
     removeTaskItems();
     addTaskItems(sortedTasks);
+    updateNavBar();
     updateHeader(headerName);
     updateSortBy();
     setupTaskEventListeners(currDispID);
@@ -50,6 +53,11 @@ const addTaskItems = (activeTasks) => {
         parentNode.insertBefore(createTask(task), refNode);
         parentNode.insertBefore(createHR(), refNode);
     });
+}
+const updateNavBar = () => {
+    document.querySelector('#inbox-qty-span').textContent = Storage.getProject('projInbox').getTasks().length;
+    document.querySelector('#today-qty-span').textContent = getTasks('Today').length;
+    document.querySelector('#thisWeek-qty-span').textContent = getTasks('This Week').length;
 }
 const updateHeader = (headerName) => {
     const mainHeader = document.querySelector('#mainHeader');
@@ -69,9 +77,12 @@ const closeProjForms = () => {
     projForms.forEach(projForm => {
         const projID = projForm.id.slice(0, -4);
         const proj = Storage.getProject(projID);
-        const liNode = proj ? createProject(proj).firstChild : createAddProj().firstChild;
-        
-        projForm.replaceWith(liNode);
+        // const liNode = proj ? createProject(proj).firstChild : createAddProj().firstChild;
+        if (proj) { //project exists
+            projForm.replaceWith(createProject(proj));
+        } else {
+            projForm.replaceWith(createAddProj());
+        }
     })
 
     setupProjEventListeners();

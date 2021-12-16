@@ -2,12 +2,16 @@ body {
     position: relative;
     height: 100vh;
     margin: 0px;
+    font-family: 'Raleway', sans-serif;
+    color: #3d405b;
 }
 main {
     flex: 1 0 auto;
     display: flex;
     flex-direction: row;
 }
+
+/* Common */
 body,
 #sideBar,
 #mainContent,
@@ -20,227 +24,266 @@ header,
     display: flex;
     flex-direction: row;
 }
+.noMarker {
+    list-style-type: none;
+}
+form {
+    display: flex;   
+}
+/* Common */
+
+/* Icons */
+.fa-inbox {
+    color: hsl(151, 24%, 40%);
+}
+.fa-calendar-day {
+    color:#cf4e26;
+}
+.fa-calendar-week {
+    color:hsl(286, 69%, 58%) ;
+}
+/* Icons */
+/* Header */
 header {
-    flex: 0 0 50px;
+    flex: 0 0 70px;
     background-color: #e07a5f;
-    font-size: 32px;
-    
+    font-size: 24px;
 }
 header > div {
-    flex-basis: 25%;
+    flex-basis: 200px;
     align-items: center;
-    /* justify-content: flex-end; */
 }
-header > div > #nav-menu-icon {
+#nav-menu-icon {
     font-size: 24px;
-    margin: 15px;
+    margin-left: 13px;
+    padding: 10px;
+    border-radius: 5px;
+    transition: all 0.2s ease-in-out;
 }
-header > div > #nav-menu-icon:hover {
+#nav-menu-icon:hover {
     cursor: pointer;
-    color: #f2cc8f;
+    background-color: hsl(13, 68%, 83%);
+    box-shadow: 0px 0px 3px 3px rgba(0, 0, 0, 0.2);
 }
-header > div > .fa-thumbtack {
+#logo-div {
+    /* height: 24px; */
     margin-left: auto;
+    align-items: center;
+    padding: 0px 6px;
+    background-color: hsl(13, 68%, 70%);
+    color: #3d405b;
+    /* border: 0.5px solid #3d405b; */
+    border-radius: 10px;
+    box-shadow: 0px 0px 4px 4px rgba(0, 0, 0, 0.1);
+    font-weight: 600;
 }
-header > div > * {
+#logo-div > * {
     margin: 5px;
 }
-header > div > span {
-    height: 32px;
-}
+/* Header */
+
+/* Sidebar - Nav */
 #sideBar {
-    flex: 0 0 300px;
+    flex: 0 0 auto;
+    max-width: 300px;
     background-color: #f2cc8f;
+    transition: all 0.2s ease-in;
 }
+#sideBar.collapsed {
+    transform: translate(-300px, 0px);
+    visibility: collapse;
+    /* display: none; */
+}
+#sideBarNavCont {
+    height: 120px;
+    justify-content: space-evenly;
+    padding: 15px;
+}
+.sideBarLink {
+    align-items: center;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 15px;
+    transition: all 0.2s ease-in-out;
+}
+.sideBarLink:hover {
+    background-color: hsl(37, 79%, 85%);
+    box-shadow: 0px 0px 3px 3px rgba(0, 0, 0, 0.2);
+}
+.sideBarLink > span:last-child {
+    margin-left: auto;
+}
+.sideBarLink > * {
+    margin: 5px;
+}
+.sideBarLink > i {
+    width: 18px;
+}
+/* Sidebar - Nav */
+
+/* Sidebar - Proj */
+#projCont {
+    padding: 0px 15px;
+}
+#proj-header-div {
+    padding: 5px;
+    align-items: center;
+}
+#proj-header-div:hover {
+    cursor: pointer;
+}
+#proj-header-div > * {
+    margin: 5px;
+}
+#proj-header-div > i {
+    transition: transform 0.25s;
+}
+#proj-header-div > h4 {
+    margin-left: 12px;
+}
+.projList {
+    margin: 0px;
+    padding-left: 26px;
+    opacity: 1;
+    transition: all 0.5s;
+}
+.collapsed {
+    transform: rotate(-90deg);
+}
+.projList-transitioned {
+    transform: translate(0px, -100px);
+    opacity: 0;
+    visibility: collapse;
+}
+.projItem,
+#addProj {
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+    height: 35px;
+    width: 100%;
+    border-radius: 15px;
+    transition: all 0.2s ease-in-out;
+}
+.projItem > li {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding-left: 11px;
+}
+.projItem > li > div {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.projItem > i {
+    flex-shrink: 0;
+    margin: 5px;
+    transition: opacity 0.3s ease-in;
+}
+.saveButton, .cancelButton {
+    border: none;
+    background-color: rgba(0, 0, 0, 0);
+    margin: 0px 5px;
+}
+.saveButton:hover {
+    color: green;
+}
+.cancelButton:hover {
+    color: #e07a5f;
+}
+.inputProj {
+    -webkit-appearance: none;
+    font-family: inherit;
+    font-size: inherit;
+    height: 35px;
+    width: 100%;
+    box-shadow: 0px 0px 3px 3px rgba(0, 0, 0, 0.2);
+    border: none;
+    border-radius: 15px;
+    background-color: hsl(37, 79%, 90%);
+    margin-right: 5px;
+    padding-left: 15px;
+    outline: none;
+}
+.inactive {
+    opacity: 0;
+}
+.projItem > span {
+    flex-shrink: 0;
+    margin: 5px 10px 5px auto;
+}
+#addProj:hover,
+.projItem:hover {
+    background-color: hsl(37, 79%, 85%);
+    box-shadow: 0px 0px 3px 3px rgba(0, 0, 0, 0.2);
+}
+#addProj > .fa-plus {
+    position: relative;
+    left: -18px;
+}
+#addProj > li {
+    position: relative;
+    left: -3px;
+}
+/* Sidebar - Proj */
+
+/* Main Content */
 #mainContent {
     flex: 1 0 auto;
     align-items: center;
     background-color: #f4f1de;
 }
-
-#sideBarNavCont {
-    background-color: yellow;
-}
-#projCont {
-    background-color: yellowgreen;
-}
-h4.flexCol {
-    margin: 15px 0px 0px;
-}
-.projList {
-    background-color: teal;
-}
-.projItem {
-    display: flex;
-    align-items: center;
-    background-color: thistle;
-    height: 26px;
-}
-.projItem li,
-.projItem h4{
-    flex: 1 0 auto;
-}
-.projItem i{
-    margin: 5px;
-}
-.projItem i:hover {
-    background-color: white;
-}
-.noMarker {
-    list-style-type: none;
-}
-.addProjLI:hover {
-    color: white;
-}
-form {
-    display: flex;   
-}
-button {
-    padding: 0px;
-}
-.fa-save{
-    font-size: 16px;
-}
-
-/* Main Content */
 .taskHeader,
 .taskList {
     width: 100%;
     max-width: 600px;
+    padding: 0px 0px;
+    margin: 16px;
+}
+.taskHeader {
+    align-items: center;
+}
+.dropdown-sort {
+    margin-left: auto;
+}
+.sortSelCont {
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 400;
+    align-items: center;
+    padding: 2.5px 2.5px;
+    border: 0.5px solid darkgray;
+    border-radius: 5px;
+    margin: 5px;
+    background-color: hsl(52, 50%, 95%);
+    min-width: 125px;
+    cursor: inherit;
+}
+.sortSelCont:hover{
+    border-width: 1px;
+}
+.sortSelCont > * {
+    margin: 3px;
 }
 .strike {
     text-decoration: line-through;
 }
 hr {
     width: 100%;
+    border: 0.2px solid lightgray;
 }
 .taskItem {
-    background-color: oldlace;
+    padding: 5px 12px;
+    border-radius: 10px;
+    transition: all 0.2s ease-in-out;
+    opacity: 1;
 }
-.taskLI {
-    align-items: center;
-    background-color: tomato;
-}
-.taskLI li,
-.taskCont {
-    flex: 1 0 auto;
-}
-.taskLI i {
-    margin: 5px;
-}
-.descPrev {
-    font-size: 14px;
-    color: grey;
-}
-.taskDate {
-    margin-left: 5px;
-}
-.clearButton {
-    cursor: pointer;
-    font-size: 16px;
-    background-color: transparent;
-    border: 0;
-    margin: 5px;
-    color: black;
+.taskHover {
+    background-color:hsl(52, 50%, 97%);
 }
 .taskItemLeft {
     width: 26px;
     text-align: center;
-}
-#addText {
-    margin: 0px;
-}
-#addTask:hover {
-    color: red;
-}
-.taskButtonCont {
-}
-.taskButton {
-    align-items: center;
-    padding: 2.5px 2.5px;
-    border: 1px solid black;
-    border-radius: 5px;
-    margin: 5px;
-    background-color: white;
-}
-.taskButton > * {
-    margin: 2.5px 2.5px;
-}
-.projSelCont {
-    cursor: pointer;
-}
-.dropdown {
-    position: relative;
-    cursor: pointer;
-}
-.dropdown:last-child {
-    margin-left: auto;
-}
-.dropdown-menu {
-    position: absolute;
-    left: 5px;
-    top: 100%;
-    background-color: white;
-    padding: .25rem;
-    border-radius: .25rem;
-    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .2);
-    opacity: 0;
-    pointer-events: none;
-    transform: translateY(-10px);
-    transition: opacity 150ms ease-in-out, transform 150ms ease-in-out;
-}
-.dropdown.active > * + .dropdown-menu {
-    opacity: 1;
-    transform: translateY(0);
-    pointer-events: auto;
-}
-.dropdown-sort {
-    align-self: flex-end;
-}
-.sortSelCont {
-    align-items: center;
-    padding: 2.5px 2.5px;
-    border: 1px solid black;
-    border-radius: 5px;
-    margin: 5px;
-    background-color: white;
-}
-.sortSelCont > * {
-    margin: 3px;
-}
-.dropdown-item
-{
-    align-items: center;
-    padding: 2.5px 2.5px;
-    border: 1px solid gray;
-    border-radius: 5px;
-    margin: 5px;
-    background-color: white;
-    
-}
-.dropdown-item:hover {
-    background-color: rgb(0, 183, 255);
-}
-.dropdown-item > * {
-    margin: 0px 5px;
-}
-.priSelCont {
-    border: none;
-}
-.dropdown-item-text {
-    width: max-content;
-}
-#taskDate {
-    padding: 0px;
-}
-.dateInput {
-    border: none;
-}
-
-.saveButton {
-}
-.cancelButton {
-    
 }
 .fa-circle,
 .fa-check-circle {
@@ -248,6 +291,203 @@ hr {
     padding: 3px;
     border-radius: 5px;
 }
+.taskCont {
+    padding-left: 5px;
+    cursor: pointer;
+}
+.taskLI {
+    align-items: center;
+    /* padding-left: 5px; */
+}
+.taskLI > li,
+.taskCont {
+    flex: 1 0 auto;
+}
+.taskLI > li {
+    font-size: 18px;
+    font-weight: 600;
+}
+.taskLI > i {
+    margin: 5px;
+    transition: opacity 0.3s ease-in;
+}
+.descPrev {
+    margin: 2px 0px;
+    font-size: 12px;
+    color: rgb(122, 122, 122);
+    font-weight: 400;
+}
+.taskDate {
+    margin-left: 5px;
+}
+#taskDate {
+    padding: 0px;
+}
+#addTask {
+    padding: 5px 12px;
+    transition: color 0.2s ease-in-out;
+}
+#addTask:hover {
+    color: #e07a5f;
+    cursor: pointer;
+}
+#addText {
+    margin: 0px;
+}
+.taskInputCont {
+    border: 1px solid gray;
+    border-radius: 5px;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+.taskInputCont > input {
+    -webkit-appearance: none;
+    font-family: inherit;
+    font-size: inherit;
+    background-color: rgba(0, 0, 0, 0);
+    padding: 5px;
+    border: none;
+    outline: none;
+}
+#taskTitle {
+    font-weight: 600;
+}
+#taskDesc {
+    font-weight: 300;
+    height: 20px;
+    padding-bottom: 25px;
+}
+.taskButton {
+    font-family: inherit;
+    font-size: 12px;
+    align-items: center;
+    padding: 2.5px 2.5px;
+    border: 1px solid black;
+    border-radius: 5px;
+    margin: 5px;
+    background-color: hsl(52, 50%, 97%);
+    cursor: inherit;
+    /* width: min-content; */
+    /* height: 20px; */
+}
+.taskButton > * {
+    margin: 2.5px 2.5px;
+}
+.dateInput {
+    font-family: inherit;
+    font-size: inherit;
+    border: none;
+    outline: none;
+    width: min-content;
+    text-align: center;
+    margin-right: 0px;
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0);
+}
+.dropdown { 
+    position: relative;
+    cursor: pointer;
+}
+.dropdown:last-child {
+    margin-left: auto;
+}
+.dropdown.active > * + .dropdown-menu {
+    opacity: 1;
+    transform: translateY(-3px);
+    pointer-events: auto;
+}
+.dropdown-proj {
+    /* flex: 1 1 auto; */
+    min-width: 0;
+}
+.projSelCont {
+    max-width: 97%;
+    min-width: 0;
+    
+}
+.projSelCont > div {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.dropdown-menu {
+    position: absolute;
+    left: 5px;
+    top: 100%;
+    background-color: hsl(52, 50%, 97%);
+    padding: .25rem;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .2);
+    opacity: 0;
+    pointer-events: none;
+    /* transform: translateY(-3px); */
+    transition: opacity 150ms ease-in-out, transform 150ms ease-in-out;
+    border-radius: 15px;
+}
+.menu-proj {
+    max-width: 200px;
+}
+.menu-pri {
+    left: -70px;
+}
+.dropdown-item
+{
+    align-items: center;
+    padding: 2.5px 2.5px;
+    /* border: 1px solid gray; */
+    border-radius: 5px;
+    margin: 5px;
+    font-size: 12px;
+}
+.dropdown-item > div {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.dropdown-item > * {
+    margin: 0px 5px;
+}
+.dropdown-item:hover {
+    background-color: #f2cc8f;
+}
+.dropdown-item > .fa-circle {
+    transform: scale(0.35) translate(-7px, 0px);
+}
+.fa-circle + div {
+    transform: translate(-7px, 0px);
+}
+.priSelCont {
+    border: none;
+    background-color: rgba(0,0,0,0);
+}
+.saveTask {
+    margin-right: 10px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    background-color: #e07a5f;
+    color: #f4f1de;
+    border: none;
+    border-radius: 5px;
+    padding: 3px 7px;
+    cursor: pointer;
+}
+.cancelTask {
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    background-color: hsl(52, 50%, 97%);
+    border: 0.5px solid darkgray;
+    border-radius: 5px;
+    padding: 3px 7px;
+    cursor: pointer;
+}
+.saveTask:hover,
+.cancelTask:hover {
+    border: 0.5px solid black;
+    /* border-color: black; */
+}
+/* Main Content */
+
 
 footer {
     flex: 0 0 2rem;
