@@ -1,13 +1,6 @@
-/* Task.js 
-
-Module responsible for creating a task object and supporting functions
-
-*/
 import { formatISO, parseISO, differenceInCalendarDays, format, isThisYear, isToday, isThisWeek, isPast } from 'date-fns'
-import { Storage } from './storage'
 
 const Task = (id, title, description, date, priority, projID) => {
-
     let isComplete = false;
 
     const proto = {
@@ -75,19 +68,20 @@ const Schedule = () => {
             return formatISO(today, { representation: 'date'});
         },
         getFormattedDate(date) {
-
             const ISODate = parseISO(date);
+            const todayColor = '#cf4e26';
+            const pastColor = '#cf4e26';
+            const upcomingColor = '#bb4ade';
 
-            if (isToday(ISODate)) return 'Today';
-            if (isPast(ISODate)) return format(ISODate, 'MMM d y');
-            if (differenceInCalendarDays(ISODate, today) <= 7) return format(ISODate, 'EEEE'); 
-            if (isThisYear(ISODate)) return format(ISODate, 'MMM d');
-            return format(ISODate, 'MMM d y')
+            if (isToday(ISODate)) return ['Today', todayColor];
+            if (isPast(ISODate)) return [format(ISODate, 'MMM d y'), pastColor];
+            if (differenceInCalendarDays(ISODate, today) <= 7) return [format(ISODate, 'EEEE'), upcomingColor]; 
+            if (isThisYear(ISODate)) return [format(ISODate, 'MMM d'), 'default'];
+            return [format(ISODate, 'MMM d y'), 'default'];
         },
         isThisWeek(date) {
             return isThisWeek(parseISO(date));
         }
-        
     }
     return Object.create(proto);
 }

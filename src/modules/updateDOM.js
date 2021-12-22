@@ -1,6 +1,3 @@
-// Module responsiblibilities:
-// - Handles updating DOM elements
-// - Updates DOM with current active projects / tasks
 import { createProject, createAddProj, createTask, createHR, createAddTask, createProjSelectButton, createPrioritySelectButton } from './createDOM'
 import { setupProjEventListeners, setupTaskEventListeners } from './eventListeners';
 import { Storage } from './storage'
@@ -10,13 +7,10 @@ let currDispID = 'projInbox';
 let currSortOrder = 'byDefault';
 
 const updateProjectList = () => {
-    
-    // document.querySelectorAll('.projItem').forEach(item => item.remove());
-    // document.querySelector('#addProj').remove();
     const projList = document.querySelector('#projList');
 
     while (projList.firstChild) projList.removeChild(projList.firstChild);
-    
+
     Storage.getProjects().forEach(proj => {
         if(proj.getID() !== 'projInbox') projList.appendChild(createProject(proj));
     });
@@ -25,7 +19,6 @@ const updateProjectList = () => {
     setupProjEventListeners();
 }
 const updateTaskList = (dispID) => {
-
     if(dispID) currDispID = dispID;
     
     const headerName = currDispID.startsWith('proj') ? Storage.getProject(currDispID).getName() : currDispID;
@@ -36,6 +29,7 @@ const updateTaskList = (dispID) => {
     removeTaskItems();
     addTaskItems(sortedTasks);
     updateNavBar();
+    updateProjQty();
     updateHeader(headerName);
     updateSortBy();
     setupTaskEventListeners(currDispID);
@@ -45,7 +39,6 @@ const removeTaskItems = () => {
     document.querySelectorAll('hr').forEach(hr => hr.remove());
 }
 const addTaskItems = (activeTasks) => {
-
     const refNode = document.querySelector('#addTask');
     const parentNode = refNode.parentNode;
 
@@ -59,6 +52,12 @@ const updateNavBar = () => {
     document.querySelector('#today-qty-span').textContent = getTasks('Today').length;
     document.querySelector('#thisWeek-qty-span').textContent = getTasks('This Week').length;
 }
+const updateProjQty = () => {
+    document.querySelectorAll('.projQty').forEach(projNumber => {
+        const projID = projNumber.closest('.projItem').id.slice(0, -4);
+        projNumber.textContent = Storage.getProject(projID).getTasks().length;
+    })
+}
 const updateHeader = (headerName) => {
     const mainHeader = document.querySelector('#mainHeader');
     mainHeader.textContent = headerName;
@@ -71,20 +70,17 @@ const closeAllForms = () => {
     closeTaskForms();
 }
 const closeProjForms = () => {
-    
     const projForms = document.querySelectorAll('.projForm');
     
     projForms.forEach(projForm => {
         const projID = projForm.id.slice(0, -4);
         const proj = Storage.getProject(projID);
-        // const liNode = proj ? createProject(proj).firstChild : createAddProj().firstChild;
-        if (proj) { //project exists
+        if (proj) {
             projForm.replaceWith(createProject(proj));
         } else {
             projForm.replaceWith(createAddProj());
         }
     })
-
     setupProjEventListeners();
 }
 const closeTaskForms = () => {
@@ -104,10 +100,8 @@ const removeTaskForm = (taskForm) => {
     taskForm.replaceWith(createAddTask());
 }
 const updateProjDropdown = (projID) => {
-    
     const projCont = createProjSelectButton(projID);
     document.querySelector('.projSelCont').replaceWith(projCont);
-
 }
 const updatePriDropdown = (priority) => {
     const priCont = createPrioritySelectButton(priority);
@@ -116,4 +110,5 @@ const updatePriDropdown = (priority) => {
 const updateSortDropdown = (sortOrder) => {
     currSortOrder = sortOrder;
 }
+
 export { updateProjectList, updateTaskList, closeAllForms, closeProjForms, closeTaskForms, removeTaskForm, updateProjDropdown, updatePriDropdown, updateSortDropdown };

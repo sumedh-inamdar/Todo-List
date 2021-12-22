@@ -1,21 +1,19 @@
 import { updateProjectList, updateTaskList, closeAllForms, removeTaskForm } from './updateDOM'
-import { createDOM, createAddProj, createProjForm, createAddTaskForm } from './createDOM'
-import { setupProjEventListeners, setupProjFormListener, setupTaskFormListener, setupNavEventListeners } from './eventListeners'
+import { createDOM, createProjForm, createAddTaskForm } from './createDOM'
+import { setupProjFormListener, setupTaskFormListener, setupNavEventListeners } from './eventListeners'
 import { Storage } from './storage'
 import { Project } from './project'
 import { Schedule, Task } from './task'
 import { isBefore, parseISO } from 'date-fns'
 
-let currActiveProjID = 'projInbox';
-
 const loadApp = () => {
     if (Storage.checkLocalStorage()) Storage.loadLocalStorage();
     else Storage.createLocalStorage();
+
     createDOM();
     setupNavEventListeners(); // nav corresponds to ('inbox, 'today', 'this week')
     updateProjectList();
     updateTaskList('projInbox');
-
 }
 const expandSidebar = () => {
     const sidebar = document.querySelector('#sideBar');
@@ -24,8 +22,7 @@ const expandSidebar = () => {
 const displayProject = (event) => {
     if (event.target.matches('i')) return;
     closeAllForms();
-    const projItem = event.target.closest('.projItem');
-    const projID = projItem.querySelector('li').id.slice(0, -2);
+    const projID = event.target.closest('.projItem').id.slice(0, -4);
     updateTaskList(projID);
 }
 const displayInbox = (event) => {
@@ -33,17 +30,14 @@ const displayInbox = (event) => {
     updateTaskList('projInbox');
 }
 const displayToday = (event) => {
-    
     closeAllForms();
     updateTaskList('Today');
-
 }
 const displayThisWeek = (event) => {
     closeAllForms();
     updateTaskList('This Week');
 }
 const editProject = (event) => {
-    
     closeAllForms();
 
     const currProjID = event.target.id.slice(0,-4);
@@ -51,18 +45,12 @@ const editProject = (event) => {
     const projItem = event.target.closest('.projItem');
 
     projItem.replaceWith(projForm);
-    // remove display of edit and del buttons
-    // document.querySelector(`#${currProjID}EDIT`).remove();
-    // document.querySelector(`#${currProjID}DEL`).remove();
-
+ 
     setupProjFormListener(projForm);
-
 }
 const submitProject = (event) => {
-
     const projID = event.target.id.slice(0,-4);
     const newProjName = document.querySelector('#projInput').value;
-    // const ulElement = document.querySelector('#projList');
 
     if (Storage.isProjNameTaken(newProjName) ) alert('Project name exists');
     else if (Storage.getProject(projID)) Storage.updateProjectName(projID, newProjName);  
@@ -73,7 +61,6 @@ const submitProject = (event) => {
     event.preventDefault();
 }
 const deleteProject = (event) => {
-    
     closeAllForms();
 
     const projID = event.target.id.slice(0, -3);
@@ -82,23 +69,20 @@ const deleteProject = (event) => {
     updateProjectList();
     updateTaskList('projInbox');
     Storage.saveToLocalStorage();
-
 }
 const addProject = (event) => {
-    
     closeAllForms();
 
-    // const addProjLI = event.target;
     const projID = Storage.generateProjID();
     const projForm = createProjForm(projID);
 
     document.querySelector('#addProj').replaceWith(projForm);
     setupProjFormListener(projForm);
-
 }
 const toggleProjIcons = (event) => {
     const projItem = event.target.closest('.projItem');
     const projIcons = projItem.querySelectorAll('.fa-edit, .fa-trash-alt');
+
     projIcons.forEach(projIcon => projIcon.classList.toggle('inactive'));
 }
 const expandProjHeader = (event) => {
@@ -114,20 +98,16 @@ const toggleTaskHover = (event) => {
 
     taskItem.classList.toggle('taskHover');
     taskIcons.forEach(taskIcon => taskIcon.classList.toggle('inactive'));
-    
 }
 const getTasks = (projID) => {
-
-    if (projID.startsWith('proj')) {
-        return Storage.getProject(projID).getTasks();
-
-    } else if (projID === 'Today') {
+    if (projID.startsWith('proj')) return Storage.getProject(projID).getTasks();
+    if (projID === 'Today') {
         const allTasks = Storage.getProjects().map(proj => proj.getTasks()).flat();
         const tasksToday = allTasks.filter(task => task.getDate() === Schedule().getDateToday());
 
         return tasksToday;
-
-    } else if (projID === 'This Week') {
+    } 
+    else if (projID === 'This Week') {
         const allTasks = Storage.getProjects().map(proj => proj.getTasks()).flat();
         const tasksThisWeek = allTasks.filter(task => Schedule().isThisWeek(task.getDate()));
         
@@ -136,6 +116,7 @@ const getTasks = (projID) => {
 }
 const sortTasks = (tasks, sortOrder) => {
     let shallowCopy = tasks.slice(); // ensures default ordering is untouched
+
     if (sortOrder === 'byDefault') return shallowCopy;
     if (sortOrder === 'byDate') return shallowCopy.sort((a, b) => {
         if (compareTaskByDate(a, b) !== 0) return compareTaskByDate(a, b);
@@ -165,7 +146,6 @@ const compareTaskByPriority = (a, b) => {
     return 0;
 }
 const addTask = (dispID) => {
-    
     closeAllForms();
 
     const addTaskDIV = document.querySelector('#addTask');
@@ -174,11 +154,7 @@ const addTask = (dispID) => {
 
     addTaskDIV.replaceWith(taskForm);
     setupTaskFormListener(taskForm, dispID);
-
 }
-// Need to refactor this function when we add ability to change project for each Task
-// add task (need to add to curr active project)
-// edit task (update task with values from form)
 const submitTask = (event, dispID) => {
     event.preventDefault();
 
@@ -190,7 +166,6 @@ const submitTask = (event, dispID) => {
     const taskProj = document.querySelector('.projSelCont').id.slice(0, -6); 
 
     if (Storage.taskID_exists(taskID)) {
-
         const newTask = Storage.getTask(taskID);
         const currProjID = newTask.getProjID();
         newTask.update(taskTitle, taskDesc, taskDate, taskPriority, taskProj);
@@ -209,10 +184,8 @@ const submitTask = (event, dispID) => {
     }
     updateTaskList();
     Storage.saveToLocalStorage();
-
 }
 const editTask = (event) => {
-    
     closeAllForms();
 
     const currTaskID = event.target.closest('.taskItem').id.slice(0, -4);
@@ -222,40 +195,32 @@ const editTask = (event) => {
     currTaskItem.replaceWith(taskForm);
 
     setupTaskFormListener(taskForm, currProjID);
-
 }
 const deleteTask = (event) => {
-    
     closeAllForms();
 
     const taskID = event.target.id.slice(0, -3);
 
-    // delete task from project
     const activeProjID = Storage.getTask(taskID).getProjID();
     const activeProj = Storage.getProject(activeProjID);
     activeProj.removeTask(taskID);
     Storage.updateProject(activeProjID, activeProj);
 
-    // remove taskID from storage
     Storage.removeTaskID(taskID);
     
     updateTaskList();
     Storage.saveToLocalStorage();
 }
 const toggleCheck = (event) => {
-
     const taskID = event.target.id.slice(0, -5);
     const task = Storage.getTask(taskID);
 
     if (!task.isCompleted()) {
-        // event.target.classList.toggle('far');
-        // event.target.classList.toggle('fas');
         event.target.classList.toggle('fa-check-circle');
         event.target.classList.toggle('fa-circle');
     }
 }
 const checkTask = (event) => {
-    
     const taskID = event.target.id.slice(0, -5);
     const task = Storage.getTask(taskID);
 
@@ -263,6 +228,5 @@ const checkTask = (event) => {
     updateTaskList();
     Storage.saveToLocalStorage();
 }
-
 
 export { loadApp, expandSidebar, displayProject, editProject, submitProject, deleteProject, addProject, toggleProjIcons, expandProjHeader, toggleTaskHover, getTasks, sortTasks, addTask, submitTask, editTask, deleteTask, toggleCheck, checkTask, displayInbox, displayToday, displayThisWeek }

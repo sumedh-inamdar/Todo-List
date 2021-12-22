@@ -14,26 +14,36 @@ const getIndexByID = (projID) => {
 const Storage = {
     loadSampleProjects: () => {
         const inbox = Inbox();
+        const taskList = [];
+
         Storage.addProject(inbox);
         
-        Storage.addProject(Project('proj1', 'Cleaning'));
-        Storage.addProject(Project('proj2', 'Packing'));
-        Storage.addProject(Project('proj3', 'Mopping'));
+        Storage.addProject(Project('proj1', 'Household'));
+        Storage.addProject(Project('proj2', 'Odin Project'));
+        Storage.addProject(Project('proj3', 'Holidays'));
+        Storage.addProject(Project('proj4', 'Vacation'));
         
-        const task1 = Task('task1', 'Garbage', 'Take garbage out to street','2021-12-31', 'p3', 'projInbox');
-        const task2 = Task('task2', 'Bathroom Floors', 'Clean bathroom floors','2021-12-09', 'p1', 'projInbox');
-        const task3 = Task('task3', 'Kitchen Floors', 'Clean kitchen floors','2021-12-31', 'p2', 'projInbox');
-        const task4 = Task('task4', 'Vacation', 'Buy ticket to Mexico','2021-12-31', 'p3', 'projInbox');
+        taskList.push(Task('task1', 'Garbage', 'Take garbage out to street','2021-12-31', 'p3', 'proj1'));
+        taskList.push(Task('task2', 'Bathroom Floors', 'Clean bathroom floors','2021-12-23', 'p1', 'proj1'));
+        taskList.push(Task('task3', 'Kitchen Floors', 'Clean kitchen floors','2021-12-27', 'p2', 'proj1'));
 
-        Storage.getProject(inbox.getID()).addTask(task1);
-        Storage.getProject(inbox.getID()).addTask(task2);
-        Storage.getProject(inbox.getID()).addTask(task3);
-        Storage.getProject(inbox.getID()).addTask(task4);
+        taskList.push(Task('task4', 'SOLID', 'Read and understand SOLID principles', '2021-12-30', 'p1', 'proj2'));
+        taskList.push(Task('task5', 'CSS', 'Play around / get familiar with Flexbox', '2022-01-05', 'p2', 'proj2'));
 
-        Storage.addTaskID('task1');
-        Storage.addTaskID('task2');
-        Storage.addTaskID('task3');
-        Storage.addTaskID('task4');
+        taskList.push(Task('task6', 'Gifts', 'Buy christmas gifts for partner','2021-12-23', 'p1', 'proj3'));
+        taskList.push(Task('task7', 'Wrapping', 'Wrap all gifts and attach bowtie','2021-12-23', 'p2', 'proj3'));
+
+        taskList.push(Task('task8', 'Vacation', 'Buy tickets to Mexico','2022-01-31', 'p3', 'proj4'));
+
+        taskList.push(Task('task9', 'Todo list', 'Finish up todo list project','2021-12-22', 'p1', 'projInbox'));
+        taskList.push(Task('task10', 'Javascript', 'Get familiar with advanced javascript methods','2021-12-28', 'p2', 'projInbox'));
+        taskList.push(Task('task11', 'Tennis', 'Reserve court and schedule next league match','2021-12-24', 'p3', 'projInbox'));
+        taskList.push(Task('task12', 'Call back Tim', '','2022-01-15', 'p4', 'projInbox'));
+
+        taskList.forEach(task => {
+            Storage.getProject(task.getProjID()).addTask(task);
+            Storage.addTaskID(task.getID());
+        })
     },
     createLocalStorage: () => {
         Storage.loadSampleProjects();
@@ -55,7 +65,6 @@ const Storage = {
                 if (task.completed) newTask.check();
                 projObj.addTask(newTask);
             })
-            
             arrayProjObj.push(projObj);
         })
         return arrayProjObj;
@@ -130,7 +139,6 @@ const Storage = {
         if (activeTaskIDs.includes(taskID)) return activeProjects.find(proj => proj.getTask(taskID)).getTask(taskID);
     },
     generateTaskID: () => {
-        
         if (activeTaskIDs.length >= TASK_LIMIT) return false;
         
         let rand;
@@ -149,7 +157,6 @@ const Storage = {
         } while (Storage.projID_exists(`proj${rand}`));
         
         return `proj${rand}`;
-
     },
     projID_exists: (id) => {
         return activeProjIDs.includes(id);

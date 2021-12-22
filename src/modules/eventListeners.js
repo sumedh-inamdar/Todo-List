@@ -1,13 +1,6 @@
-// Module responsiblibilities:
-// - Query elements and setup event listeners
-// - Calls appLogic functions 
 import { expandSidebar, displayProject, editProject, submitProject, deleteProject, addProject, toggleProjIcons, expandProjHeader, toggleTaskHover, addTask, submitTask, editTask, deleteTask, checkTask, toggleCheck, displayInbox, displayToday, displayThisWeek } from './appLogic'
 import { closeProjForms, closeTaskForms, updateProjDropdown, updatePriDropdown, updateSortDropdown, updateTaskList } from './updateDOM'
 
-// const setupAllEventListeners = () => {
-//     setupProjEventListeners();
-//     setupTaskEventListeners();
-// }
 const setupNavEventListeners = () => {
     const navMenuIcon = document.querySelector('#nav-menu-icon');
     const inboxNode = document.querySelector('#projInboxLI');
@@ -20,14 +13,10 @@ const setupNavEventListeners = () => {
     thisWeekNode.addEventListener('click', displayThisWeek);
 }
 const setupProjEventListeners = () => {
-
-    // later: setup event listeners for project LI elements
     const projHeader = document.querySelector('#proj-header-div');
     const projItems = document.querySelectorAll('.projItem');
-    const projNodes = document.querySelectorAll('.projItem > li');
     const editNodes = document.querySelectorAll('.projItem > .fa-edit');
     const delNodes = document.querySelectorAll('.projItem > .fa-trash-alt');
-    // const addProjLI = document.querySelector('#addProjectLI');
     const addProjNode = document.querySelector('#addProj');
     
     projHeader.addEventListener('click', expandProjHeader);
@@ -36,7 +25,6 @@ const setupProjEventListeners = () => {
     projItems.forEach(projNode => projNode.addEventListener('click', displayProject))
     editNodes.forEach(editNode => editNode.addEventListener('click', editProject));
     delNodes.forEach(delNode => delNode.addEventListener('click', deleteProject));
-    // addProjLI.addEventListener('click', addProject);
     addProjNode.addEventListener('click', addProject);
 }
 const setupProjFormListener = (projForm) => {
@@ -50,8 +38,6 @@ const setupProjFormListener = (projForm) => {
     projForm.addEventListener('keyup', (event) => {
         if (event.code === 'Escape') return closeProjForms()
     })
-
-
 }
 const setupTaskEventListeners = (dispID) => {
     const checkNodes = document.querySelectorAll('.check');
@@ -83,21 +69,14 @@ const setupTaskFormListener = (taskForm, dispID) => {
     document.addEventListener('keyup', (event) => {
         if (event.code === 'Escape') return closeTaskForms();
     })
-    
 }
-
 const setupDropdownListener = (event) => {
-    
-    // figure out how to enable other listeners in form
     const isDropDownButton = event.target.closest('.dropdown');
     const isDropDownItem = event.target.closest('.dropdown-item');
     const isTaskForm = event.target.closest('.taskForm');
     const isProjForm = event.target.closest('.projForm');
 
-    // if (!isDropDownButton && event.target.closest('.dropdown') != null) return; // do nothing if click is inside dropdown menu
-
     if (isDropDownItem) {
-        
         if (isDropDownItem.closest('.menu-proj')) {
             const selectedProjID = isDropDownItem.id.slice(0, -8);
             updateProjDropdown(selectedProjID);    
@@ -116,15 +95,12 @@ const setupDropdownListener = (event) => {
         currentDropdown = event.target.closest('.dropdown');
         currentDropdown.classList.toggle('active');
     }
-
     document.querySelectorAll('.dropdown.active').forEach(dropDown => {
         if (dropDown === currentDropdown) return;
         dropDown.classList.remove('active');
     })
-
     if ((isTaskForm && !isDropDownButton) || isProjForm) return; // allows other form click events to occur
     event.preventDefault();
-
 }
 
 export { setupProjEventListeners, setupProjFormListener, setupTaskEventListeners, setupTaskFormListener, setupNavEventListeners };

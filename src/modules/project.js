@@ -1,9 +1,3 @@
-/* Project.js 
-
-Module responsible for creating a Project object and supporting functions
-
-*/
-// import { Task } from './task.js';
 const getIndexByID = (state, taskID) => {
     return state.tasks.findIndex(task => task.getID() === taskID);
 }
@@ -38,23 +32,18 @@ const Project = (id, name) => {
         name,
         tasks: []
     }
-    
     const setName = (newName) => {
         state.name = newName;
     }
-
     return Object.assign({}, proto(state), { setName });
 }
-
 const Inbox = () => {
     let state = {
         id: 'projInbox',
         name: 'Inbox',
         tasks: []
     }
-
     return Object.assign({}, proto(state));
-    
 }
 
 export { Project, Inbox };

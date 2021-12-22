@@ -40,7 +40,7 @@ form {
     color:#cf4e26;
 }
 .fa-calendar-week {
-    color:hsl(286, 69%, 58%) ;
+    color:#bb4ade;
 }
 /* Icons */
 /* Header */
@@ -84,7 +84,7 @@ header > div {
 
 /* Sidebar - Nav */
 #sideBar {
-    flex: 0 0 auto;
+    flex: 1 0 auto;
     max-width: 300px;
     background-color: #f2cc8f;
     transition: all 0.2s ease-in;
@@ -93,6 +93,12 @@ header > div {
     transform: translate(-300px, 0px);
     visibility: collapse;
     /* display: none; */
+}
+@media (max-width: 600px) {
+    #sideBar {
+        transform: translate(-300px, 0px);
+        visibility: collapse;
+    }
 }
 #sideBarNavCont {
     height: 120px;
@@ -229,22 +235,27 @@ header > div {
 
 /* Main Content */
 #mainContent {
-    flex: 1 0 auto;
+    flex: 1 1 auto;
     align-items: center;
+    min-width: 0;
     background-color: #f4f1de;
 }
 .taskHeader,
 .taskList {
-    width: 100%;
-    max-width: 600px;
-    padding: 0px 0px;
+    width: clamp(300px, 100% - 32px, 800px);
+    padding: 0px;
     margin: 16px;
 }
 .taskHeader {
     align-items: center;
+    padding-left: 10px;
+}
+#mainHeader {
+    flex: 1 1 auto;
 }
 .dropdown-sort {
     margin-left: auto;
+    flex: 0 0 auto;
 }
 .sortSelCont {
     font-family: inherit;
@@ -285,6 +296,9 @@ hr {
     width: 26px;
     text-align: center;
 }
+.check {
+    cursor: pointer;
+}
 .fa-circle,
 .fa-check-circle {
     font-size: 1.2em;
@@ -301,7 +315,8 @@ hr {
 }
 .taskLI > li,
 .taskCont {
-    flex: 1 0 auto;
+    flex: 1 1 auto;
+    min-width: 0;
 }
 .taskLI > li {
     font-size: 18px;
@@ -316,6 +331,9 @@ hr {
     font-size: 12px;
     color: rgb(122, 122, 122);
     font-weight: 400;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 .taskDate {
     margin-left: 5px;
@@ -452,6 +470,9 @@ hr {
 .dropdown-item > .fa-circle {
     transform: scale(0.35) translate(-7px, 0px);
 }
+.dropdown-item-text {
+    flex: 1 0 auto;
+}
 .fa-circle + div {
     transform: translate(-7px, 0px);
 }
@@ -497,7 +518,7 @@ footer {
     text-align: center;
     width: 100%;
     min-width: 300px;
-    background-color: violet;
+    background-color: #fefae0;
 }
 
 footer input {

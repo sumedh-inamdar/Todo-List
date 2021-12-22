@@ -1,26 +1,22 @@
-// Module responsiblibilities:
-// - Builds DOM upon initial load
-// - Create elements and add to document
-// - Loads active projects and tasks
 import { Storage } from './storage'
 import { Schedule } from './task'
-import { updatePriDropdown } from './updateDOM';
+import octocat from '../Octocat.png';
 
 const _createElement = (type, classNameArr, text, id) => {
     const element = document.createElement(type);
     if (classNameArr) element.classList.add(...classNameArr);
     if (text) element.textContent = text;
     if (id) element.id = id;
+
     return element;
 }
 const createDOM = () => {
     _createHeader();
     _createSideBar();
     _createMain();
-
+    _createFooter();
 }
 const _createHeader = () => {
-    
     const headerDiv = _createElement('div', ['flexRow']);
     const navBarIcon = _createElement('i', ['fas', 'fa-bars'], '', 'nav-menu-icon');
     const logoDiv = _createElement('div', ['flexRow'], '', 'logo-div');
@@ -29,6 +25,7 @@ const _createHeader = () => {
 
     logoDiv.append(tasksIcon, headerText);
     headerDiv.append(navBarIcon, logoDiv);
+
     document.querySelector('header').append(headerDiv);
 }
 const _createSideBar = () => document.querySelector('#sideBar').append(_createSideBar_Nav(), _createSideBar_Proj());
@@ -78,29 +75,30 @@ const createAddProj = () => {
     const addProjCont = _createElement('div', '', '', 'addProj');
     const addProjIcon = _createElement('i', ['fas', 'fa-plus']);
     const addProjLI = _createElement('li', ['noMarker'], 'Add Project', 'addProjectLI');
+
     addProjCont.append(addProjIcon, addProjLI);
+
     return addProjCont;
 }
 const createProject = (proj) => {
-    
     const projName = proj.getName();
     const projID = proj.getID();
-    const numTasks = proj.getTasks().length || '0';
 
-    const projectElement = _createElement('div', ['projItem']);
-    const liNode = _createElement('li', '', '', projID + 'LI'); // consider moving projID to projItem
+    const projectElement = _createElement('div', ['projItem'], '', projID + 'ITEM');
+    const liNode = _createElement('li', '', '', projID + 'LI');
     const projText = _createElement('div', '', projName);
+    projText.title = projName;
     const editIcon = _createElement('i', ['far','fa-edit', 'inactive'], '', projID + 'EDIT');
     const delIcon = _createElement('i', ['far','fa-trash-alt', 'inactive'], '', projID + 'DEL');
-    const projQty = _createElement('span', '', numTasks);
+    const projQty = _createElement('span', ['projQty'], '0');
 
     liNode.append(projText);
+
     projectElement.append(liNode, editIcon, delIcon, projQty);
 
     return projectElement;
 }
 const createProjForm = (projID) => {
-
     const projForm = _createElement('form', ['projForm'], '', projID + 'FORM');
 
     const projInput = _createElement('input', ['inputProj'], '', 'projInput');
@@ -119,6 +117,7 @@ const createProjForm = (projID) => {
 
     saveButton.append(saveIcon);
     cancelButton.append(cancelIcon);
+
     projForm.append(projInput, saveButton, cancelButton);
 
     return projForm;
@@ -145,25 +144,48 @@ const _createMain = () => {
 
     sortCont.append(caretDown, sortText);
     sortDropdownMenu.append(byDefault, byDate, byPriority);
-    sortDropdown.append(sortCont, sortDropdownMenu);
-    headerContainer.append(header, sortDropdown);
-    mainContent.append(headerContainer, taskList);
 
+    sortDropdown.append(sortCont, sortDropdownMenu);
+
+    headerContainer.append(header, sortDropdown);
+
+    mainContent.append(headerContainer, taskList);
+}
+const _createFooter = () => {
+    const footer = document.querySelector('footer');
+    const text = document.createElement('small');
+    const link = document.createElement('a');
+    const img = document.createElement('input');
+    
+    text.textContent = `\u00A9 Copyright `;
+    text.textContent += new Date().getFullYear();
+    text.textContent += ', sumedh-inamdar';
+
+    link.href = 'https://github.com/sumedh-inamdar';
+    link.target = '_blank';
+    link.title = 'Link to personal Github';
+
+    img.type = "image";
+    img.alt = "Github";
+    img.src = octocat;
+    
+    link.append(img);
+
+    footer.append(text, link);
 }
 const createAddTask = () => {
-    
     const addCont = _createElement('div', ['flexRow', 'task'], '', 'addTask');
     const addItemLeft = _createElement('div', ['taskItemLeft']);
     const addIcon = _createElement('i', ['fas', 'fa-plus-circle']);
     const addText = _createElement('p', '', 'Add Task', 'addText');
 
     addItemLeft.append(addIcon);
+
     addCont.append(addItemLeft, addText);
 
     return addCont;
 }
 const createTask = (task) => {
-
         const taskID = task.getID();
 
         const outerCont = _createElement('div', ['flexRow', 'taskItem'], '', taskID + 'ITEM');
@@ -172,25 +194,28 @@ const createTask = (task) => {
 
         const liCont = _createElement('div', ['flexRow', 'taskLI'], '', '');
         const descPrev = _createElement('div', ['descPrev'], task.getDescription(), '');
+        descPrev.title = task.getDescription();
         const scheduleCont = _createElement('div', ['flexRow', 'descPrev']);
-
 
         const markerClass = task.isCompleted() ? 'fa-check-circle' : 'fa-circle';
         const outerCircle = _createElement('i',['far', markerClass, 'check'], '', taskID + 'CHECK');
         applyPriorityColorToMarker(outerCircle, task.getPriority());
     
         const liNode = _createElement('li', ['noMarker'], task.getTitle());
+        liNode.title = task.getTitle();
         if (task.isCompleted()) liNode.classList.add('strike');
         const editNode = _createElement('i', ['far','fa-edit', 'inactive'], '', taskID + 'EDIT');
         const delIcon = _createElement('i', ['far','fa-trash-alt', 'inactive'], '', taskID + 'DEL');
         
         const calIcon = _createElement('i', ['far', 'fa-calendar-alt']);
-        const taskDate = _createElement('div', ['taskDate'], task.getDateDOM());
+        const taskDate = _createElement('div', ['taskDate']);
+        [taskDate.textContent, scheduleCont.style.color] = task.getDateDOM();
+        taskDate.title = task.getDate();
 
         checkCont.append(outerCircle);
-
         liCont.append(liNode, editNode, delIcon);
         scheduleCont.append(calIcon, taskDate);
+        
         taskCont.append(liCont, descPrev);
         if (taskDate.textContent) taskCont.append(scheduleCont);
 
@@ -199,18 +224,13 @@ const createTask = (task) => {
         return outerCont;
 }
 const applyPriorityColorToMarker = (marker, priority) => {
-    
     if (marker.classList.contains('fa-check-circle')) marker.style.fontWeight = 'bold';
     marker.style.color = getPriorityInfo(priority)[1];
     marker.style.backgroundColor = getPriorityInfo(priority)[1] + '34';
-    
 }
-const createHR = () => {
-    return _createElement('hr');
-}
+const createHR = () => _createElement('hr');
 
 const createAddTaskForm = (taskID, dispID) => {
-
     const taskForm = _createElement('form', ['flexCol','taskForm'], '', taskID + 'FORM');
 
     const taskInputCont = _createElement('div', ['flexCol', 'taskInputCont']);
@@ -261,9 +281,12 @@ const createAddTaskForm = (taskID, dispID) => {
     scheduleCont.append(calIcon, dateInput);
     projDropdown.append(projCont, projDropdownMenu);
     priDropdown.append(priCont, priDropdownMenu);
+
     taskButtonCont.append(scheduleCont, projDropdown, priDropdown);
+
     taskInputCont.append(titleInput, descInput, taskButtonCont);
     saveButtonCont.append(saveButton, cancelButton);
+
     taskForm.append(taskInputCont, saveButtonCont)
 
     return taskForm;
@@ -280,13 +303,13 @@ const populateProjSelDropdown = (dropdown) => {
         let projItem = _createElement('div', ['flexRow', 'dropdown-item'], '', projID + 'dropdown');
         let icon = projID === 'projInbox' ? inboxIcon : projIcon;
         let projText = _createElement('div', '', projName);
+        projText.title = projName;
 
         projItem.append(icon, projText);
         dropdown.append(projItem);
     })
 }
 const createProjSelectButton = (projID) => {
-    
     const projCont = _createElement('button', ['flexRow', 'projSelCont', 'taskButton'], '', projID + 'SELECT');
     projCont.type = 'button';
     const inboxIcon = _createElement('i', ['fas', 'fa-inbox']);
@@ -312,19 +335,15 @@ const populatePriSelDropdown = (dropdown) => {
     })
 }
 const createPrioritySelectButton = (priority) => {
-    
     const priCont = _createElement('button', ['flexRow', 'priSelCont', 'taskButton'], '', priority + 'SELECT');
     priCont.type = 'button';
     const icon = _createElement('i', ['fas', 'fa-flag']);
-    // set color of icon based on priority
     icon.style.color = getPriorityInfo(priority)[1];
     priCont.append(icon);
 
     return priCont;
-
 }
 const getPriorityInfo = (priority) => {
-    
     switch (priority) {
         case 'p1':
             return ['Priority 1', '#ff3300'];
@@ -336,6 +355,5 @@ const getPriorityInfo = (priority) => {
             return ['Priority 4', 'gray'];
     }
 }
-
 
 export { createDOM, createProject, createAddProj, createProjForm, createAddTask, createTask, createHR, createAddTaskForm, createProjSelectButton, createPrioritySelectButton };
