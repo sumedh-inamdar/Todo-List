@@ -1,4 +1,4 @@
-# Todo-List
+# Tacklist
 
 To-do list application encompassing JS OOP common principles / best practices. 
 Layout and design inspired by Todoist (todoist.com)
